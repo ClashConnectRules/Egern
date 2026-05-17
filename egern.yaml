@@ -1,23 +1,35 @@
-ipv6: false
+ipv6: true
 vif_only: true
 hide_vpn_icon: false
 hijack_dns:
 - '*:53'
-geoip_db_url: https://github.com/Hackl0us/GeoIP2-CN/raw/release/Country.mmdb
-direct_latency_test_url: http://connectivitycheck.gstatic.com/generate_204
-
+geoip_db_url: https://raw.githubusercontent.com/Masaiki/GeoIP2-CN/release/Country.mmdb
+asn_db_url: https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLite2-ASN.mmdb
+direct_latency_test_url: http://wifi.vivo.com.cn/generate_204
+compat_route: false
+vif_excluded_routes:
+- boc.com
+- cmbchina.com
 dns:
   bootstrap:
   - 223.5.5.5
-  - 223.6.6.6
   - 119.29.29.29
+  - 1.12.12.12
+  - 120.53.53.53
+  - 2400:3200::1
   upstreams:
+    AdBlack:
+    - quic://dns.adguard-dns.com
+    - https://dns.adguard-dns.com/dns-query
     Alibaba:
     - 223.5.5.5
     - https://dns.alidns.com/dns-query
     Tencent:
     - 119.29.29.29
     - https://doh.pub/dns-query
+    ByteDance:
+    - 180.184.2.2
+    - 180.184.1.1
     China:
     - 223.5.5.5
     - 119.29.29.29
@@ -29,60 +41,35 @@ dns:
     - https://dns.google/dns-query
     - https://cloudflare-dns.com/dns-query
   forward:
-  - domain_suffix:
-      match: cn
+  - proxy_rule_set:
+      match: https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt
+      value: AdBlack
+      disabled: false
+  - proxy_rule_set:
+      match: https://rule.kelee.one/Loon/Alibaba.lsr
+      value: Alibaba
+  - proxy_rule_set:
+      match: https://rule.kelee.one/Loon/Tencent.lsr
+      value: Tencent
+  - proxy_rule_set:
+      match: https://rule.kelee.one/Loon/DouYin.lsr
+      value: ByteDance
+  - proxy_rule_set:
+      match: https://rule.kelee.one/Loon/Apple.lsr
       value: China
-  - domain_wildcard:
-      match: '*.cn'
+  - proxy_rule_set:
+      match: https://rule.kelee.one/Loon/ChinaMax.lsr
       value: China
+  - proxy_rule_set:
+      match: https://rule.kelee.one/Loon/Global.lsr
+      value: Global
   - domain_wildcard:
       match: '*'
       value: Global
-  hosts:
-    '*.taobao.com': 223.5.5.5
-    '*.tmall.com': 223.5.5.5
-    '*.alipay.com': 223.5.5.5
-    '*.alicdn.com': 223.5.5.5
-    '*.aliyun.com': 223.5.5.5
-    '*.jd.com': 119.28.28.28
-    '*.qq.com': 119.28.28.28
-    '*.tencent.com': 119.28.28.28
-    '*.weixin.com': 119.28.28.28
-    '*.bilibili.com': 119.29.29.29
-    hdslb.com: 119.29.29.29
-    '*.163.com': 119.29.29.29
-    '*.126.com': 119.29.29.29
-    '*.126.net': 119.29.29.29
-    '*.127.net': 119.29.29.29
-    '*.netease.com': 119.29.29.29
-    '*.mi.com': 119.29.29.29
-    '*.xiaomi.com': 119.29.29.29
-    testflight.apple.com: 8.8.4.4
-    mtalk.google.com: 108.177.125.188
-    dl.google.com: 119.29.29.29
-    dl.l.google.com: 119.29.29.29
-    update.googleapis.com: 119.29.29.29
-    amplifi.lan: system
-    router.synology.com: system
-    sila.razer.com: system
-    router.asus.com: system
-    routerlogin.net: system
-    orbilogin.com: system
-    www.LinksysSmartWiFi.com: system
-    LinksysSmartWiFi.com: system
-    myrouter.local: system
-    www.miwifi.com: system
-    miwifi.com: system
-    mediarouter.home: system
-    tplogin.cn: system
-    tplinklogin.net: system
-    melogin.cn: system
-    falogin.cn: system
   proxy_nameservers:
   - https://doh.pub/dns-query
   - https://dns.alidns.com/dns-query
   public_ip_lookup_url: https://ifconfig.me/ip
-
 policy_groups:
 - select:
     name: Mainland
@@ -314,7 +301,6 @@ policy_groups:
     - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/speedtest.png
     hidden: false
-
 rules:
 - rule_set:
     match: https://raw.githubusercontent.com/zxfccmm4/Profiles/refs/heads/main/Surge/Ruleset/Unbreak.list
@@ -586,48 +572,10 @@ rules:
     no_resolve: true
 - default:
     policy: NoAuto
-
-url_rewrites:
-- match: '^https?:\/\/(www\.)?(g|google)\.cn'
-  location: https://www.google.com
-  status_code: 302
-- match: '^https?:\/\/(ditu|maps)\.google\.cn'
-  location: https://maps.google.com
-  status_code: 302
-- match: '^https?:\/\/(www\.)?taobao\.com\/'
-  location: https://taobao.com/
-  status_code: 302
-- match: '^https?:\/\/(www\.)?jd\.com\/'
-  location: https://www.jd.com/
-  status_code: 302
-- match: '^https?:\/\/(www\.)?mi\.com\/'
-  location: https://www.mi.com/
-  status_code: 302
-- match: '^https?:\/\/you\.163\.com\/'
-  location: https://you.163.com/
-  status_code: 302
-- match: '^https?:\/\/(www\.)?suning\.com\/'
-  location: https://suning.com/
-  status_code: 302
-- match: '^https?:\/\/(www\.)?yhd\.com\/'
-  location: https://yhd.com/
-  status_code: 302
-- match: '^https?:\/\/api\.abema\.io\/v\d\/ip\/check'
-  location: ''
-  status_code: -1
-
-header_rewrites:
-- replace:
-    match: '^https:\/\/github\.com\/'
-    name: Accept-Language
-    value: en-us
-    type: request
-- replace:
-    match: '^https:\/\/(raw|gist)\.githubusercontent\.com\/'
-    name: Accept-Language
-    value: en-us
-    type: request
-
+scriptings:
+- generic:
+    name: 网络
+    script_url: https://raw.githubusercontent.com/hikling/egern/refs/heads/main/component/wangluo.js
 mitm:
   ca_p12: egern.p12
   ca_passphrase: egern
