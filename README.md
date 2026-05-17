@@ -3,33 +3,51 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Egern-1-blue?style=flat-square" alt="Egern">
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/Platform-iOS%20%7C%20macOS-lightgrey?style=flat-square" alt="Platform">
 </p>
 
 <p align="center">
   <b>Advanced Egern Proxy Configuration</b><br>
-  <i>Smart Routing, Ad Blocking, Streaming Unlock</i>
+  <i>Smart Routing · Ad Blocking · Streaming Unlock · AI Service Optimization</i>
 </p>
 
 <p align="center">
-  <a href="#-basic-settings">Basic</a> &bull;
-  <a href="#-dns-configuration">DNS</a> &bull;
-  <a href="#-proxy-groups">Groups</a> &bull;
-  <a href="#-rule-priority">Rules</a> &bull;
-  <a href="#-installation">Install</a>
-</p>
-
-<p align="center">
-  <b>Language / 语言切换</b><br>
   <a href="README_zh.md">简体中文</a> | <a href="README.md">English</a>
 </p>
 
 ---
 
-## Download
+## Features
 
-| File | Link |
-|:----:|:-----|
-| **egern.yaml** | [Download](https://raw.githubusercontent.com/ClashConnectRules/Egern/refs/heads/main/egern.yaml) |
+- **Smart DNS** — Bootstrap + DoH upstreams with domain-based forwarding
+- **Ad Blocking** — Dual-layer blocking via AdBlack DNS + reject rulesets
+- **Regional Routing** — 8 region groups with auto-filtered subscription nodes
+- **Streaming Unlock** — Netflix, Disney+, YouTube, TikTok, Bilibili
+- **AI Optimization** — Dedicated routing for OpenAI, Claude, Gemini, Bing
+- **Protocol Support** — SS, Trojan, Vless, VMess, Hysteria 2, TUIC, WireGuard
+
+## Quick Start
+
+1. Download [`egern.yaml`](https://raw.githubusercontent.com/ClashConnectRules/Egern/refs/heads/main/egern.yaml)
+2. Open **Egern** > **Profiles** > **Import**
+3. Replace `https://your-subscription-url` in `AllServer` with your subscription link
+4. Done — regional groups auto-pull nodes via `flatten: true`
+
+---
+
+## Table of Contents
+
+- [Basic Settings](#basic-settings)
+- [DNS Configuration](#dns-configuration)
+- [Proxy Groups](#proxy-groups)
+- [Rule Priority](#rule-priority)
+- [Supported Protocols](#supported-protocols)
+- [MITM Hostnames](#mitm-hostnames)
+- [Installation](#installation)
+- [Custom Icons](#custom-icons)
+- [Rule Sources](#rule-sources)
+- [Credits](#credits)
+- [License](#license)
 
 ---
 
@@ -48,7 +66,8 @@
 
 ## DNS Configuration
 
-### Bootstrap DNS
+<details>
+<summary><b>Bootstrap DNS</b></summary>
 
 | Server | Provider |
 |:------:|:--------:|
@@ -58,7 +77,10 @@
 | `120.53.53.53` | ByteDance |
 | `2400:3200::1` | CNNIC (IPv6) |
 
-### DoH Upstreams
+</details>
+
+<details>
+<summary><b>DoH Upstreams</b></summary>
 
 | Name | Servers |
 |:----:|:--------|
@@ -69,7 +91,10 @@
 | `China` | Alibaba + Tencent combined |
 | `Global` | Cloudflare, Google DNS |
 
-### DNS Forward Rules
+</details>
+
+<details>
+<summary><b>DNS Forward Rules</b></summary>
 
 | Match | Target | Description |
 |:-----:|:------:|:-----------|
@@ -82,11 +107,10 @@
 | `proxy_rule_set` (Global) | Global | International domains |
 | `*` | Global | Default fallback |
 
-### DNS Hijack
+</details>
 
-All DNS queries (`*:53`) are hijacked to prevent leakage.
-
-### Host Mapping
+<details>
+<summary><b>Host Mapping</b></summary>
 
 | Service | DNS Server | Description |
 |:-------:|:----------:|:-----------:|
@@ -98,6 +122,10 @@ All DNS queries (`*:53`) are hijacked to prevent leakage.
 | Google (FCM / Download) | Special | Google services |
 | Router Admin | System | Local routers |
 
+</details>
+
+All DNS queries (`*:53`) are hijacked to prevent leakage.
+
 ---
 
 ## Proxy Groups
@@ -107,43 +135,55 @@ All DNS queries (`*:53`) are hijacked to prevent leakage.
 | Group | Type | Description |
 |:-----:|:----:|:-----------|
 | `AllServer` | `external` | All subscription nodes (auto-filter) |
-| `Automatic` | `auto_test` | Regional auto-select |
+| `Automatic` | `auto_test` | Regional auto-select (300s interval, 50ms tolerance) |
 | `Proxy` | `select` | Proxy policy |
 | `NoAuto` | `select` | Main entry point |
 | `Mainland` | `select` | China Direct |
 
-### Regional Groups (Select + Flatten)
-
-| Group | Filter Keywords | Emoji |
-|:-----:|:---------------:|:-----:|
-| `Hong Kong` | HK, Hong Kong, HKG | 🇭🇰 |
-| `Taiwan` | TW, Taiwan, TWN | 🇹🇼 |
-| `Japan` | JP, Japan, JPN | 🇯🇵 |
-| `Singapore` | SG, Singapore, SGP | 🇸🇬 |
-| `United States` | US, USA, States, American | 🇺🇸 |
-| `United Kingdom` | UK, England, Britain | 🇬🇧 |
-| `Korea` | KR, Korea, KOR | 🇰🇷 |
-| `Other` | Exclude above regions | 🌍 |
+### Regional Groups
 
 All regional groups use `flatten: true` + `filter` from AllServer, with `update_interval: 86400` (daily refresh).
 
+| Group | Filter Keywords | Emoji |
+|:-----:|:---------------:|:-----:|
+| `Hong Kong` | HK, Hong Kong, HKG, MO | :flag_hk: |
+| `Taiwan` | TW, Taiwan, TWN | :flag_tw: |
+| `Japan` | JP, Japan, JPN | :flag_jp: |
+| `Singapore` | SG, Singapore, SGP, MA | :flag_sg: |
+| `United States` | US, USA, States, American | :flag_us: |
+| `United Kingdom` | UK, England, Britain | :flag_gb: |
+| `Korea` | KR, Korea, KOR | :flag_kr: |
+| `Other` | Exclude above regions | :earth_africa: |
+
 ### Service Groups
+
+All service groups include `AllServer` as a fallback option for manual node selection.
 
 | Group | Policies | Purpose |
 |:-----:|:--------:|:-------|
-| `AI` | Automatic, US, JP, SG | ChatGPT, Claude, Gemini, Bing |
-| `Apple` | Mainland, HK, US | Apple services |
-| `Microsoft` | Mainland, HK, SG, US | Microsoft services |
-| `OneDrive` | Mainland, HK, SG, US | Cloud storage |
-| `Telegram` | Automatic, SG, US, HK, TW, JP | Messaging |
-| `X` | Automatic, HK, TW, SG, JP, US | Twitter / X |
-| `WeChat` | Mainland, HK, SG, US | WeChat |
-| `Netflix` | HK, TW, SG, JP, US | Netflix streaming |
-| `Disney+` | HK, SG | Disney+ streaming |
-| `YouTube` | Automatic, HK, TW, SG, JP, US | YouTube streaming |
-| `TikTok` | TW, SG, JP, US | TikTok unlock |
-| `Bilibili` | Mainland, HK, TW | Bilibili (HK/TW unlock) |
+| `AI` | Automatic, US, JP, SG, AllServer | ChatGPT, Claude, Gemini, Bing |
+| `Apple` | Mainland, HK, US, AllServer | Apple services |
+| `Microsoft` | Mainland, HK, SG, US, AllServer | Microsoft services |
+| `OneDrive` | Mainland, HK, SG, US, AllServer | Cloud storage |
+| `Telegram` | Automatic, SG, US, HK, TW, JP, AllServer | Messaging |
+| `X` | Automatic, HK, TW, SG, JP, US, AllServer | Twitter / X |
+| `WeChat` | Mainland, HK, SG, US, AllServer | WeChat |
+| `Netflix` | HK, TW, SG, JP, US, AllServer | Netflix streaming |
+| `Disney+` | HK, SG, AllServer | Disney+ streaming |
+| `YouTube` | Automatic, HK, TW, SG, JP, US, AllServer | YouTube streaming |
+| `TikTok` | TW, SG, JP, US, AllServer | TikTok unlock |
+| `Bilibili` | Mainland, HK, TW, AllServer | Bilibili (HK/TW unlock) |
 | `Speedtest` | Mainland, Automatic, AllServer | Speed test |
+
+### Group Dependency
+
+```
+AllServer (subscription)
+  └─ Regional Groups (HK, TW, JP, SG, US, UK, KR, Other)  [flatten]
+       ├─ Automatic (auto_test)
+       └─ Service Groups (AI, Apple, Netflix, ...)
+            └─ All include AllServer as fallback
+```
 
 ---
 
@@ -200,19 +240,15 @@ MITM is required for URL rewrite and header rewrite features.
 
 ### Method 1: Import in App
 
-```
-1. Download egern.yaml
-2. Egern > Profiles > Import
+1. Download `egern.yaml`
+2. **Egern** > **Profiles** > **Import**
 3. Select the downloaded file
-```
 
 ### Method 2: iCloud Sync
 
-```
-1. Save egern.yaml to iCloud Drive
-2. Egern > Profiles > Import from iCloud
+1. Save `egern.yaml` to iCloud Drive
+2. **Egern** > **Profiles** > **Import from iCloud**
 3. Select the file
-```
 
 ### Configure Subscription
 
@@ -232,32 +268,6 @@ Only the `AllServer` group needs the subscription URL. Regional groups automatic
 
 ---
 
-## Rule Sources
-
-| Source | Description |
-|:------:|:-----------|
-| [blackmatrix7](https://github.com/blackmatrix7/ios_rule_script) | Cross-platform rules |
-| [Skk.moe](https://ruleset.skk.moe) | SKK ruleset |
-| [VirgilClyne](https://github.com/VirgilClyne/GetSomeFries) | ASN rules |
-| [Semporia](https://github.com/Semporia/TikTok-Unlock) | TikTok unlock |
-| [zxfccmm4](https://github.com/zxfccmm4) | Unbreak rules |
-| [Loyalsoldier](https://github.com/Loyalsoldier/surge-rules) | Reject ruleset |
-
----
-
-## Notes
-
-| Item | Description |
-|:----:|:-----------|
-| Subscription | Replace with your own subscription URL in AllServer |
-| Rule Update | Rules and nodes auto-update from online sources |
-| Speed Test | 300s interval, 3s timeout, 50ms tolerance |
-| Node Filter | Auto-filter nodes with "traffic/reset/expire" keywords |
-| DNS Hijack | All DNS queries hijacked to prevent leakage |
-| Ad Blocking | AdBlack DNS + reject rule set for comprehensive blocking |
-
----
-
 ## Custom Icons
 
 Each policy group supports a custom `icon` field:
@@ -273,7 +283,8 @@ Each policy group supports a custom `icon` field:
 
 Icons should be **PNG format**, recommended size **120x120 px**.
 
-### Recommended Icon Packs
+<details>
+<summary><b>Recommended Icon Packs</b></summary>
 
 | Icon Pack | Link |
 |:---------:|:-----|
@@ -281,6 +292,21 @@ Icons should be **PNG format**, recommended size **120x120 px**.
 | Orz-3 (Color) | [miniColor.json](https://raw.githubusercontent.com/Orz-3/mini/master/miniColor.json) |
 | tugepaopao | [Cute.json](https://raw.githubusercontent.com/tugepaopao/Image-Storage/master/other/Cute.json) |
 | Semporia | [Semporia.json](https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Semporia.json) |
+
+</details>
+
+---
+
+## Rule Sources
+
+| Source | Description |
+|:------:|:-----------|
+| [blackmatrix7](https://github.com/blackmatrix7/ios_rule_script) | Cross-platform rules |
+| [Skk.moe](https://ruleset.skk.moe) | SKK ruleset |
+| [VirgilClyne](https://github.com/VirgilClyne/GetSomeFries) | ASN rules |
+| [Semporia](https://github.com/Semporia/TikTok-Unlock) | TikTok unlock |
+| [zxfccmm4](https://github.com/zxfccmm4) | Unbreak rules |
+| [Loyalsoldier](https://github.com/Loyalsoldier/surge-rules) | Reject ruleset |
 
 ---
 
@@ -295,7 +321,7 @@ Icons should be **PNG format**, recommended size **120x120 px**.
 
 ## License
 
-**MIT**
+[MIT](LICENSE)
 
 ---
 

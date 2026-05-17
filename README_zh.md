@@ -3,33 +3,51 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Egern-1-blue?style=flat-square" alt="Egern">
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/Platform-iOS%20%7C%20macOS-lightgrey?style=flat-square" alt="Platform">
 </p>
 
 <p align="center">
   <b>高级 Egern 代理配置</b><br>
-  <i>智能分流、广告拦截、流媒体解锁、AI 服务优化</i>
+  <i>智能分流 · 广告拦截 · 流媒体解锁 · AI 服务优化</i>
 </p>
 
 <p align="center">
-  <a href="#-基础设置">基础</a> &bull;
-  <a href="#-dns-配置">DNS</a> &bull;
-  <a href="#-策略分组">分组</a> &bull;
-  <a href="#-规则优先级">规则</a> &bull;
-  <a href="#-安装">安装</a>
-</p>
-
-<p align="center">
-  <b>Language / 语言切换</b><br>
   <a href="README_zh.md">简体中文</a> | <a href="README.md">English</a>
 </p>
 
 ---
 
-## 下载
+## 功能特性
 
-| 文件 | 链接 |
-|:----:|:-----|
-| **egern.yaml** | [下载](https://raw.githubusercontent.com/ClashConnectRules/Egern/refs/heads/main/egern.yaml) |
+- **智能 DNS** — Bootstrap + DoH 上游，按域名智能转发
+- **广告拦截** — AdBlack DNS + 拒绝规则集双重拦截
+- **地区分流** — 8 个地区组，自动过滤订阅节点
+- **流媒体解锁** — Netflix、Disney+、YouTube、TikTok、Bilibili
+- **AI 优化** — OpenAI、Claude、Gemini、Bing 专用路由
+- **协议支持** — SS、Trojan、Vless、VMess、Hysteria 2、TUIC、WireGuard
+
+## 快速开始
+
+1. 下载 [`egern.yaml`](https://raw.githubusercontent.com/ClashConnectRules/Egern/refs/heads/main/egern.yaml)
+2. 打开 **Egern** > **配置文件** > **导入**
+3. 将 `AllServer` 中的 `https://your-subscription-url` 替换为你的订阅链接
+4. 完成 — 地区组通过 `flatten: true` 自动拉取节点
+
+---
+
+## 目录
+
+- [基础设置](#基础设置)
+- [DNS 配置](#dns-配置)
+- [策略分组](#策略分组)
+- [规则优先级](#规则优先级)
+- [支持的协议](#支持的协议)
+- [MITM 主机名](#mitm-主机名)
+- [安装](#安装)
+- [自定义图标](#自定义图标)
+- [规则来源](#规则来源)
+- [致谢](#致谢)
+- [许可证](#许可证)
 
 ---
 
@@ -48,7 +66,8 @@
 
 ## DNS 配置
 
-### Bootstrap DNS
+<details>
+<summary><b>Bootstrap DNS</b></summary>
 
 | 服务器 | 提供商 |
 |:------:|:--------:|
@@ -58,7 +77,10 @@
 | `120.53.53.53` | 字节跳动 |
 | `2400:3200::1` | CNNIC (IPv6) |
 
-### DoH 上游
+</details>
+
+<details>
+<summary><b>DoH 上游</b></summary>
 
 | 名称 | 服务器 |
 |:----:|:--------|
@@ -69,7 +91,10 @@
 | `China` | 阿里云 + 腾讯组合 |
 | `Global` | Cloudflare、Google DNS |
 
-### DNS 转发规则
+</details>
+
+<details>
+<summary><b>DNS 转发规则</b></summary>
 
 | 匹配 | 目标 | 说明 |
 |:-----:|:------:|:-----------|
@@ -82,11 +107,10 @@
 | `proxy_rule_set`（Global） | Global | 国际域名 |
 | `*` | Global | 默认兜底 |
 
-### DNS 劫持
+</details>
 
-所有 DNS 查询（`*:53`）被劫持以防止泄露。
-
-### Host 映射
+<details>
+<summary><b>Host 映射</b></summary>
 
 | 服务 | DNS 服务器 | 说明 |
 |:-------:|:----------:|:-----------:|
@@ -98,6 +122,10 @@
 | Google（FCM / 下载） | 特殊 | Google 服务 |
 | 路由器管理 | 系统 DNS | 本地路由器 |
 
+</details>
+
+所有 DNS 查询（`*:53`）被劫持以防止泄露。
+
 ---
 
 ## 策略分组
@@ -107,43 +135,55 @@
 | 分组 | 类型 | 描述 |
 |:-----:|:----:|:-----------|
 | `AllServer` | `external` | 全部订阅节点（自动过滤） |
-| `Automatic` | `auto_test` | 地区自动选择 |
+| `Automatic` | `auto_test` | 地区自动选择（300s 间隔、50ms 容差） |
 | `Proxy` | `select` | 代理策略 |
 | `NoAuto` | `select` | 主入口 |
 | `Mainland` | `select` | 中国大陆直连 |
 
-### 地区分组（Select + Flatten）
-
-| 分组 | 过滤关键词 | Emoji |
-|:-----:|:---------:|:-----:|
-| `Hong Kong` | HK、Hong Kong、HKG | 🇭🇰 |
-| `Taiwan` | TW、Taiwan、TWN | 🇹🇼 |
-| `Japan` | JP、Japan、JPN | 🇯🇵 |
-| `Singapore` | SG、Singapore、SGP | 🇸🇬 |
-| `United States` | US、USA、States、American | 🇺🇸 |
-| `United Kingdom` | UK、England、Britain | 🇬🇧 |
-| `Korea` | KR、Korea、KOR | 🇰🇷 |
-| `Other` | 排除以上地区 | 🌍 |
+### 地区分组
 
 所有地区组使用 `flatten: true` + `filter` 从 AllServer 拉取节点，`update_interval: 86400`（每天刷新）。
 
+| 分组 | 过滤关键词 | Emoji |
+|:-----:|:---------:|:-----:|
+| `Hong Kong` | HK、Hong Kong、HKG、MO | :flag_hk: |
+| `Taiwan` | TW、Taiwan、TWN | :flag_tw: |
+| `Japan` | JP、Japan、JPN | :flag_jp: |
+| `Singapore` | SG、Singapore、SGP、MA | :flag_sg: |
+| `United States` | US、USA、States、American | :flag_us: |
+| `United Kingdom` | UK、England、Britain | :flag_gb: |
+| `Korea` | KR、Korea、KOR | :flag_kr: |
+| `Other` | 排除以上地区 | :earth_africa: |
+
 ### 服务分组
+
+所有服务组均包含 `AllServer` 作为备选，可手动选择任意订阅节点。
 
 | 分组 | 策略 | 用途 |
 |:-----:|:----:|:-------|
-| `AI` | Automatic、US、JP、SG | ChatGPT、Claude、Gemini、Bing |
-| `Apple` | Mainland、HK、US | 苹果服务 |
-| `Microsoft` | Mainland、HK、SG、US | 微软服务 |
-| `OneDrive` | Mainland、HK、SG、US | 云存储 |
-| `Telegram` | Automatic、SG、US、HK、TW、JP | 电报 |
-| `X` | Automatic、HK、TW、SG、JP、US | Twitter / X |
-| `WeChat` | Mainland、HK、SG、US | 微信 |
-| `Netflix` | HK、TW、SG、JP、US | Netflix 流媒体 |
-| `Disney+` | HK、SG | Disney+ 流媒体 |
-| `YouTube` | Automatic、HK、TW、SG、JP、US | YouTube 流媒体 |
-| `TikTok` | TW、SG、JP、US | TikTok 解锁 |
-| `Bilibili` | Mainland、HK、TW | 哔哩哔哩（港台解锁） |
+| `AI` | Automatic、US、JP、SG、AllServer | ChatGPT、Claude、Gemini、Bing |
+| `Apple` | Mainland、HK、US、AllServer | 苹果服务 |
+| `Microsoft` | Mainland、HK、SG、US、AllServer | 微软服务 |
+| `OneDrive` | Mainland、HK、SG、US、AllServer | 云存储 |
+| `Telegram` | Automatic、SG、US、HK、TW、JP、AllServer | 电报 |
+| `X` | Automatic、HK、TW、SG、JP、US、AllServer | Twitter / X |
+| `WeChat` | Mainland、HK、SG、US、AllServer | 微信 |
+| `Netflix` | HK、TW、SG、JP、US、AllServer | Netflix 流媒体 |
+| `Disney+` | HK、SG、AllServer | Disney+ 流媒体 |
+| `YouTube` | Automatic、HK、TW、SG、JP、US、AllServer | YouTube 流媒体 |
+| `TikTok` | TW、SG、JP、US、AllServer | TikTok 解锁 |
+| `Bilibili` | Mainland、HK、TW、AllServer | 哔哩哔哩（港台解锁） |
 | `Speedtest` | Mainland、Automatic、AllServer | 网速测试 |
+
+### 分组依赖关系
+
+```
+AllServer（订阅源）
+  └─ 地区组（HK、TW、JP、SG、US、UK、KR、Other）[flatten]
+       ├─ Automatic（自动测速）
+       └─ 服务组（AI、Apple、Netflix、...）
+            └─ 均包含 AllServer 作为备选
+```
 
 ---
 
@@ -200,19 +240,15 @@ MITM 是 URL 重写和请求头重写功能的前提。
 
 ### 方法一：应用内导入
 
-```
-1. 下载 egern.yaml
-2. Egern > 配置文件 > 导入
+1. 下载 `egern.yaml`
+2. **Egern** > **配置文件** > **导入**
 3. 选择下载的文件
-```
 
 ### 方法二：iCloud 同步
 
-```
-1. 将 egern.yaml 保存到 iCloud 云盘
-2. Egern > 配置文件 > 从 iCloud 导入
+1. 将 `egern.yaml` 保存到 iCloud 云盘
+2. **Egern** > **配置文件** > **从 iCloud 导入**
 3. 选择文件
-```
 
 ### 配置订阅
 
@@ -232,32 +268,6 @@ MITM 是 URL 重写和请求头重写功能的前提。
 
 ---
 
-## 规则来源
-
-| 来源 | 描述 |
-|:------:|:-----------|
-| [blackmatrix7](https://github.com/blackmatrix7/ios_rule_script) | 跨平台规则 |
-| [Skk.moe](https://ruleset.skk.moe) | SKK 规则集 |
-| [VirgilClyne](https://github.com/VirgilClyne/GetSomeFries) | ASN 规则 |
-| [Semporia](https://github.com/Semporia/TikTok-Unlock) | TikTok 解锁 |
-| [zxfccmm4](https://github.com/zxfccmm4) | Unbreak 规则 |
-| [Loyalsoldier](https://github.com/Loyalsoldier/surge-rules) | 拒绝规则集 |
-
----
-
-## 注意事项
-
-| 项目 | 描述 |
-|:----:|:-----------|
-| 订阅链接 | 在 AllServer 中替换为您的订阅地址 |
-| 规则更新 | 规则和节点从在线源自动更新 |
-| 测速设置 | 300s 间隔、3s 超时、50ms 容差 |
-| 节点过滤 | 自动过滤包含"流量/重置/过期"关键词的节点 |
-| DNS 劫持 | 所有 DNS 查询被劫持以防止泄露 |
-| 广告拦截 | AdBlack DNS + 拒绝规则集双重拦截 |
-
----
-
 ## 自定义图标
 
 每个策略组支持 `icon` 字段：
@@ -273,7 +283,8 @@ MITM 是 URL 重写和请求头重写功能的前提。
 
 图标应为 **PNG 格式**，推荐尺寸 **120x120 px**。
 
-### 图标包推荐
+<details>
+<summary><b>图标包推荐</b></summary>
 
 | 图标包 | 链接 |
 |:------:|:-----|
@@ -281,6 +292,21 @@ MITM 是 URL 重写和请求头重写功能的前提。
 | Orz-3（彩色） | [miniColor.json](https://raw.githubusercontent.com/Orz-3/mini/master/miniColor.json) |
 | tugepaopao | [Cute.json](https://raw.githubusercontent.com/tugepaopao/Image-Storage/master/other/Cute.json) |
 | Semporia | [Semporia.json](https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Semporia.json) |
+
+</details>
+
+---
+
+## 规则来源
+
+| 来源 | 描述 |
+|:------:|:-----------|
+| [blackmatrix7](https://github.com/blackmatrix7/ios_rule_script) | 跨平台规则 |
+| [Skk.moe](https://ruleset.skk.moe) | SKK 规则集 |
+| [VirgilClyne](https://github.com/VirgilClyne/GetSomeFries) | ASN 规则 |
+| [Semporia](https://github.com/Semporia/TikTok-Unlock) | TikTok 解锁 |
+| [zxfccmm4](https://github.com/zxfccmm4) | Unbreak 规则 |
+| [Loyalsoldier](https://github.com/Loyalsoldier/surge-rules) | 拒绝规则集 |
 
 ---
 
@@ -295,7 +321,7 @@ MITM 是 URL 重写和请求头重写功能的前提。
 
 ## 许可证
 
-**MIT**
+[MIT](LICENSE)
 
 ---
 

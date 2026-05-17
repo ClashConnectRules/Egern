@@ -73,7 +73,7 @@ policy_groups:
     type: select
     urls:
     - https://your-subscription-url
-    filter: '^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量).)+$'
+    filter: '^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量|CMCC).)+$'
     update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png
     hidden: false
@@ -82,9 +82,9 @@ policy_groups:
     policies:
     - AllServer
     flatten: true
-    filter: '🇭🇰|HK|香港|Hong\s*Kong|HongKong|HKG'
+    filter: '🇭🇰|HK|香港|Hong\s*Kong|HongKong|HKG|MO'
     update_interval: 86400
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Hongkong.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Hongkong(3).png
     hidden: false
 - select:
     name: Taiwan
@@ -93,7 +93,7 @@ policy_groups:
     flatten: true
     filter: '🇹🇼|TW|台湾|Taiwan|Tai|TWN'
     update_interval: 86400
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/taiwan.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/taiwan(4).png
     hidden: false
 - select:
     name: Japan
@@ -102,14 +102,14 @@ policy_groups:
     flatten: true
     filter: '🇯🇵|JP|日本|Japan|JPN'
     update_interval: 86400
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Japan.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Japan(2).png
     hidden: false
 - select:
     name: Singapore
     policies:
     - AllServer
     flatten: true
-    filter: '🇸🇬|SG|新加坡|狮城|Singapore|SGP'
+    filter: '🇸🇬|SG|新加坡|狮城|Singapore|SGP|MA'
     update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/singapore.png
     hidden: false
@@ -120,7 +120,7 @@ policy_groups:
     flatten: true
     filter: '🇺🇸|US|美国|United\s*States|USA|States|American'
     update_interval: 86400
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/US.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/US(2).png
     hidden: false
 - select:
     name: United Kingdom
@@ -129,7 +129,7 @@ policy_groups:
     flatten: true
     filter: '🇬🇧|UK|英国|United\s*Kingdom|England|Britain'
     update_interval: 86400
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/UnitedKingdom.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/UnitedKingdom(2).png
     hidden: false
 - select:
     name: Korea
@@ -138,7 +138,7 @@ policy_groups:
     flatten: true
     filter: '🇰🇷|KR|韩国|Korea|KOR'
     update_interval: 86400
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Korea.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Korea(2).png
     hidden: false
 - select:
     name: Other
@@ -147,7 +147,7 @@ policy_groups:
     flatten: true
     filter: '^(?!.*(🇭🇰|HK|香港|Hong\s*Kong|HongKong|HKG|🇹🇼|TW|台湾|Taiwan|Tai|TWN|🇯🇵|JP|日本|Japan|JPN|🇸🇬|SG|新加坡|狮城|Singapore|SGP|🇺🇸|US|美国|United\s*States|USA|States|American|🇬🇧|UK|英国|United\s*Kingdom|England|Britain|🇰🇷|KR|韩国|Korea|KOR)).*$'
     update_interval: 86400
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/EuropeanUnion.png
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/EuropeanUnion(2).png
     hidden: false
 - auto_test:
     name: Automatic
