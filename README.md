@@ -7,67 +7,52 @@
 </p>
 
 <p align="center">
-  <b>Advanced Egern Proxy Configuration</b><br>
-  <i>Smart Routing · Ad Blocking · Streaming Unlock · AI Service Optimization</i>
+  Advanced proxy configuration for <a href="https://egernapp.com">Egern</a><br>
+  Smart routing · Ad blocking · Streaming unlock · AI optimization
 </p>
 
 <p align="center">
-  <a href="README_zh.md">简体中文</a> | <a href="README.md">English</a>
+  <a href="README_zh.md">简体中文</a> · <a href="README.md">English</a>
 </p>
 
 ---
 
-## Features
+## Highlights
 
-- **Smart DNS** — Bootstrap + DoH upstreams with domain-based forwarding
-- **Ad Blocking** — Dual-layer blocking via AdBlack DNS + reject rulesets
-- **Regional Routing** — 8 region groups with auto-filtered subscription nodes
-- **Streaming Unlock** — Netflix, Disney+, YouTube, TikTok, Bilibili
-- **AI Optimization** — Dedicated routing for OpenAI, Claude, Gemini, Bing
-- **Protocol Support** — SS, Trojan, Vless, VMess, Hysteria 2, TUIC, WireGuard
+| Feature | Description |
+|:--------|:------------|
+| Smart DNS | Bootstrap + DoH with domain-based forwarding, DNS hijack on `*:53` |
+| Ad Blocking | AdBlack DNS + reject ruleset (double layer) |
+| Regional Routing | 8 region groups auto-filtered from subscription |
+| Streaming | Netflix, Disney+, YouTube, TikTok, Bilibili |
+| AI Services | Dedicated routing for ChatGPT, Claude, Gemini, Bing |
+| Protocols | SS, Trojan, Vless, VMess, Hysteria 2, TUIC, SOCKS5, HTTP, WireGuard |
 
 ## Quick Start
 
 1. Download [`egern.yaml`](https://raw.githubusercontent.com/ClashConnectRules/Egern/refs/heads/main/egern.yaml)
-2. Open **Egern** > **Profiles** > **Import**
+2. **Egern** > **Profiles** > **Import** > select the file
 3. Replace `https://your-subscription-url` in `AllServer` with your subscription link
-4. Done — regional groups auto-pull nodes via `flatten: true`
-
----
-
-## Table of Contents
-
-- [Basic Settings](#basic-settings)
-- [DNS Configuration](#dns-configuration)
-- [Proxy Groups](#proxy-groups)
-- [Rule Priority](#rule-priority)
-- [Supported Protocols](#supported-protocols)
-- [MITM Hostnames](#mitm-hostnames)
-- [Installation](#installation)
-- [Custom Icons](#custom-icons)
-- [Rule Sources](#rule-sources)
-- [Credits](#credits)
-- [License](#license)
+4. Regional groups auto-pull nodes via `flatten: true` — no extra setup needed
 
 ---
 
 ## Basic Settings
 
-| Setting | Value | Description |
-|:-------:|:-----:|:-----------|
-| IPv6 | `true` | Enabled |
-| VIF Only | `true` | Virtual interface mode |
-| DNS Hijack | `*:53` | Hijack all DNS queries |
-| GeoIP | [Masaiki GeoIP2-CN](https://github.com/Masaiki/GeoIP2-CN) | China GeoIP database |
-| ASN DB | [P3TERX GeoLite](https://github.com/P3TERX/GeoLite.mmdb) | ASN database |
-| Latency Test | `http://wifi.vivo.com.cn/generate_204` | Direct latency test URL |
+| Setting | Value |
+|:--------|:------|
+| IPv6 | `true` |
+| VIF Only | `true` |
+| DNS Hijack | `*:53` |
+| GeoIP | [Masaiki/GeoIP2-CN](https://github.com/Masaiki/GeoIP2-CN) |
+| ASN DB | [P3TERX/GeoLite.mmdb](https://github.com/P3TERX/GeoLite.mmdb) |
+| Latency Test | `http://wifi.vivo.com.cn/generate_204` |
 
 ---
 
-## DNS Configuration
+## DNS
 
-<details>
-<summary><b>Bootstrap DNS</b></summary>
+### Bootstrap
 
 | Server | Provider |
 |:------:|:--------:|
@@ -77,10 +62,7 @@
 | `120.53.53.53` | ByteDance |
 | `2400:3200::1` | CNNIC (IPv6) |
 
-</details>
-
-<details>
-<summary><b>DoH Upstreams</b></summary>
+### Upstreams
 
 | Name | Servers |
 |:----:|:--------|
@@ -91,14 +73,11 @@
 | `China` | Alibaba + Tencent combined |
 | `Global` | Cloudflare, Google DNS |
 
-</details>
-
-<details>
-<summary><b>DNS Forward Rules</b></summary>
+### Forward Rules
 
 | Match | Target | Description |
-|:-----:|:------:|:-----------|
-| `proxy_rule_set` (reject list) | AdBlack | Ad blocking DNS |
+|:------|:------:|:------------|
+| `proxy_rule_set` (reject) | AdBlack | Ad blocking |
 | `proxy_rule_set` (Alibaba) | Alibaba | Alibaba services |
 | `proxy_rule_set` (Tencent) | Tencent | Tencent services |
 | `proxy_rule_set` (DouYin) | ByteDance | ByteDance services |
@@ -107,45 +86,26 @@
 | `proxy_rule_set` (Global) | Global | International domains |
 | `*` | Global | Default fallback |
 
-</details>
-
-<details>
-<summary><b>Host Mapping</b></summary>
-
-| Service | DNS Server | Description |
-|:-------:|:----------:|:-----------:|
-| Taobao / Tmall / Alipay | `223.5.5.5` | Alibaba services |
-| JD / QQ / WeChat | `119.28.28.28` | Tencent services |
-| Bilibili / NetEase | `119.29.29.29` | Entertainment |
-| Xiaomi | `119.29.29.29` | Xiaomi services |
-| TestFlight | `8.8.4.4` | Apple TestFlight |
-| Google (FCM / Download) | Special | Google services |
-| Router Admin | System | Local routers |
-
-</details>
-
-All DNS queries (`*:53`) are hijacked to prevent leakage.
-
 ---
 
-## Proxy Groups
+## Policy Groups
 
-### Core Groups
+### Core
 
 | Group | Type | Description |
-|:-----:|:----:|:-----------|
-| `AllServer` | `external` | All subscription nodes (auto-filter) |
-| `Automatic` | `auto_test` | Regional auto-select (300s interval, 50ms tolerance) |
-| `Proxy` | `select` | Proxy policy |
+|:------|:----:|:------------|
+| `AllServer` | `external` | Subscription nodes (auto-filtered) |
+| `Automatic` | `auto_test` | Auto-select by latency (300s / 50ms) |
+| `Proxy` | `select` | Manual proxy selection |
 | `NoAuto` | `select` | Main entry point |
 | `Mainland` | `select` | China Direct |
 
-### Regional Groups
+### Regions
 
-All regional groups use `flatten: true` + `filter` from AllServer, with `update_interval: 86400` (daily refresh).
+All groups use `flatten: true` from AllServer, `update_interval: 86400`.
 
-| Group | Filter Keywords | Emoji |
-|:-----:|:---------------:|:-----:|
+| Group | Filter | Icon |
+|:------|:-------|:----:|
 | `Hong Kong` | HK, Hong Kong, HKG, MO | :flag_hk: |
 | `Taiwan` | TW, Taiwan, TWN | :flag_tw: |
 | `Japan` | JP, Japan, JPN | :flag_jp: |
@@ -153,14 +113,14 @@ All regional groups use `flatten: true` + `filter` from AllServer, with `update_
 | `United States` | US, USA, States, American | :flag_us: |
 | `United Kingdom` | UK, England, Britain | :flag_gb: |
 | `Korea` | KR, Korea, KOR | :flag_kr: |
-| `Other` | Exclude above regions | :earth_africa: |
+| `Other` | Excludes above regions | :earth_africa: |
 
-### Service Groups
+### Services
 
-All service groups include `AllServer` as a fallback option for manual node selection.
+All service groups include `AllServer` as a fallback.
 
 | Group | Policies | Purpose |
-|:-----:|:--------:|:-------|
+|:------|:---------|:--------|
 | `AI` | Automatic, US, JP, SG, AllServer | ChatGPT, Claude, Gemini, Bing |
 | `Apple` | Mainland, HK, US, AllServer | Apple services |
 | `Microsoft` | Mainland, HK, SG, US, AllServer | Microsoft services |
@@ -168,21 +128,21 @@ All service groups include `AllServer` as a fallback option for manual node sele
 | `Telegram` | Automatic, SG, US, HK, TW, JP, AllServer | Messaging |
 | `X` | Automatic, HK, TW, SG, JP, US, AllServer | Twitter / X |
 | `WeChat` | Mainland, HK, SG, US, AllServer | WeChat |
-| `Netflix` | HK, TW, SG, JP, US, AllServer | Netflix streaming |
-| `Disney+` | HK, SG, AllServer | Disney+ streaming |
-| `YouTube` | Automatic, HK, TW, SG, JP, US, AllServer | YouTube streaming |
-| `TikTok` | TW, SG, JP, US, AllServer | TikTok unlock |
-| `Bilibili` | Mainland, HK, TW, AllServer | Bilibili (HK/TW unlock) |
+| `Netflix` | HK, TW, SG, JP, US, AllServer | Streaming |
+| `Disney+` | HK, SG, AllServer | Streaming |
+| `YouTube` | Automatic, HK, TW, SG, JP, US, AllServer | Streaming |
+| `TikTok` | TW, SG, JP, US, AllServer | Unlock |
+| `Bilibili` | Mainland, HK, TW, AllServer | HK/TW unlock |
 | `Speedtest` | Mainland, Automatic, AllServer | Speed test |
 
-### Group Dependency
+### Dependency
 
 ```
 AllServer (subscription)
-  └─ Regional Groups (HK, TW, JP, SG, US, UK, KR, Other)  [flatten]
-       ├─ Automatic (auto_test)
-       └─ Service Groups (AI, Apple, Netflix, ...)
-            └─ All include AllServer as fallback
+ └─ Regions (HK, TW, JP, SG, US, UK, KR, Other)
+     ├─ Automatic (auto_test)
+     └─ Services (AI, Apple, Netflix, ...)
+         └─ All include AllServer
 ```
 
 ---
@@ -190,38 +150,22 @@ AllServer (subscription)
 ## Rule Priority
 
 ```
- 1. Unbreak Rules     Fix broken connections > DIRECT
- 2. Ad Blocking       SKK Ruleset > REJECT
- 3. Privacy           Block trackers
- 4. CN Apps           WeChat, NetEase, Bilibili, Weibo
- 5. Apple Services    App Store, Apple News, Apple TV
- 6. AI Services       OpenAI, Claude, Gemini, Bing
- 7. Streaming         Disney+, Netflix, TikTok, YouTube
- 8. Regional Unlock   US, EU, JP, KR, HK, TW streams
- 9. Social Media      Twitter, Telegram, Facebook, Instagram
-10. Other Global      OneDrive, Microsoft, GitHub, Speedtest
-11. CN Rules          SKK + ChinaMax ruleset
-12. Global Rules      CDN, Global ruleset
-13. LAN               Local network > DIRECT
-14. GeoIP             CN > Mainland
-15. Final Rule        default > NoAuto
+ 1. Unbreak        DIRECT
+ 2. Ad Blocking    REJECT
+ 3. Privacy        REJECT (trackers)
+ 4. CN Apps        WeChat, NetEase, Bilibili, Weibo, XiaoHongShu
+ 5. Apple          App Store, Apple News, Apple TV, Apple CDN
+ 6. AI             OpenAI, Claude, Gemini, Bing
+ 7. Streaming      Disney+, Netflix, TikTok, YouTube
+ 8. Regional       US, EU, JP, KR, HK, TW streams
+ 9. Social         Twitter/X, Telegram, Facebook, Instagram, Discord
+10. Other          OneDrive, Microsoft, GitHub, Speedtest
+11. CN Rules       SKK + ChinaMax
+12. Global Rules   CDN, Global
+13. LAN            Local network > DIRECT
+14. GeoIP          CN > Mainland
+15. Default        NoAuto
 ```
-
----
-
-## Supported Protocols
-
-| Protocol | Support |
-|:---------|:-------:|
-| Shadowsocks | Full |
-| Trojan | Full |
-| Vless | Full (with transport) |
-| VMess | Full (with transport) |
-| Hysteria 2 | Full |
-| TUIC | Full |
-| SOCKS5 | Full |
-| HTTP | Full |
-| WireGuard | Full |
 
 ---
 
@@ -232,27 +176,26 @@ AllServer (subscription)
 - `*.zhihu.com`
 - `sub.store`
 
-MITM is required for URL rewrite and header rewrite features.
+Required for URL rewrite and header rewrite features.
 
 ---
 
 ## Installation
 
-### Method 1: Import in App
+**Method 1 — In-App Import**
 
 1. Download `egern.yaml`
 2. **Egern** > **Profiles** > **Import**
-3. Select the downloaded file
+3. Select the file
 
-### Method 2: iCloud Sync
+**Method 2 — iCloud**
 
 1. Save `egern.yaml` to iCloud Drive
 2. **Egern** > **Profiles** > **Import from iCloud**
-3. Select the file
 
-### Configure Subscription
+### Subscription
 
-Replace the placeholder URL in the `AllServer` external group:
+Only `AllServer` needs your URL. Regional groups pull nodes automatically.
 
 ```yaml
 - external:
@@ -264,13 +207,11 @@ Replace the placeholder URL in the `AllServer` external group:
     update_interval: 86400
 ```
 
-Only the `AllServer` group needs the subscription URL. Regional groups automatically pull nodes from AllServer via `flatten: true`.
-
 ---
 
 ## Custom Icons
 
-Each policy group supports a custom `icon` field:
+Each group supports `icon` (PNG, 120x120 px recommended):
 
 ```yaml
 - select:
@@ -281,15 +222,13 @@ Each policy group supports a custom `icon` field:
     icon: "https://example.com/icon.png"
 ```
 
-Icons should be **PNG format**, recommended size **120x120 px**.
-
 <details>
-<summary><b>Recommended Icon Packs</b></summary>
+<summary>Icon packs</summary>
 
-| Icon Pack | Link |
-|:---------:|:-----|
-| Qure (Color) | [QureColor-All.json](https://raw.githubusercontent.com/Koolson/Qure/master/Other/QureColor-All.json) |
-| Orz-3 (Color) | [miniColor.json](https://raw.githubusercontent.com/Orz-3/mini/master/miniColor.json) |
+| Pack | Link |
+|:-----|:-----|
+| Qure | [QureColor-All.json](https://raw.githubusercontent.com/Koolson/Qure/master/Other/QureColor-All.json) |
+| Orz-3 | [miniColor.json](https://raw.githubusercontent.com/Orz-3/mini/master/miniColor.json) |
 | tugepaopao | [Cute.json](https://raw.githubusercontent.com/tugepaopao/Image-Storage/master/other/Cute.json) |
 | Semporia | [Semporia.json](https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Semporia.json) |
 
@@ -297,34 +236,17 @@ Icons should be **PNG format**, recommended size **120x120 px**.
 
 ---
 
-## Rule Sources
-
-| Source | Description |
-|:------:|:-----------|
-| [blackmatrix7](https://github.com/blackmatrix7/ios_rule_script) | Cross-platform rules |
-| [Skk.moe](https://ruleset.skk.moe) | SKK ruleset |
-| [VirgilClyne](https://github.com/VirgilClyne/GetSomeFries) | ASN rules |
-| [Semporia](https://github.com/Semporia/TikTok-Unlock) | TikTok unlock |
-| [zxfccmm4](https://github.com/zxfccmm4) | Unbreak rules |
-| [Loyalsoldier](https://github.com/Loyalsoldier/surge-rules) | Reject ruleset |
-
----
-
 ## Credits
 
 - [Egern](https://egernapp.com)
-- [blackmatrix7](https://github.com/blackmatrix7)
-- [Skk.moe](https://github.com/Skk.moe)
+- [blackmatrix7](https://github.com/blackmatrix7/ios_rule_script)
+- [Skk.moe](https://ruleset.skk.moe)
 - [lige47/QuanX-icon-rule](https://github.com/lige47/QuanX-icon-rule)
-
----
+- [Loyalsoldier](https://github.com/Loyalsoldier/surge-rules)
+- [VirgilClyne](https://github.com/VirgilClyne/GetSomeFries)
+- [Semporia](https://github.com/Semporia/TikTok-Unlock)
+- [zxfccmm4](https://github.com/zxfccmm4)
 
 ## License
 
 [MIT](LICENSE)
-
----
-
-<p align="center">
-  <sub>Made with heart for better internet experience</sub>
-</p>
