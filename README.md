@@ -37,11 +37,12 @@
 
 | Setting | Value | Description |
 |:-------:|:-----:|:-----------|
-| HTTP Port | `6152` | HTTP proxy port |
-| SOCKS5 Port | `6153` | SOCKS5 proxy port |
-| IPv6 | `false` | Disabled by default |
-| QUIC Block | `false` | Not blocked |
-| GeoIP | [Hackl0us GeoIP2-CN](https://github.com/Hackl0us/GeoIP2-CN) | China GeoIP database |
+| IPv6 | `true` | Enabled |
+| VIF Only | `true` | Virtual interface mode |
+| DNS Hijack | `*:53` | Hijack all DNS queries |
+| GeoIP | [Masaiki GeoIP2-CN](https://github.com/Masaiki/GeoIP2-CN) | China GeoIP database |
+| ASN DB | [P3TERX GeoLite](https://github.com/P3TERX/GeoLite.mmdb) | ASN database |
+| Latency Test | `http://wifi.vivo.com.cn/generate_204` | Direct latency test URL |
 
 ---
 
@@ -52,26 +53,38 @@
 | Server | Provider |
 |:------:|:--------:|
 | `223.5.5.5` | Alibaba |
-| `223.6.6.6` | Alibaba |
 | `119.29.29.29` | Tencent |
+| `1.12.12.12` | Alibaba (New) |
+| `120.53.53.53` | ByteDance |
+| `2400:3200::1` | CNNIC (IPv6) |
 
 ### DoH Upstreams
 
-| Name | URL |
-|:----:|:-----|
-| `alidns` | `https://dns.alidns.com/dns-query` |
-| `dohpub` | `https://doh.pub/dns-query` |
+| Name | Servers |
+|:----:|:--------|
+| `AdBlack` | `quic://dns.adguard-dns.com`, `https://dns.adguard-dns.com/dns-query` |
+| `Alibaba` | `223.5.5.5`, `https://dns.alidns.com/dns-query` |
+| `Tencent` | `119.29.29.29`, `https://doh.pub/dns-query` |
+| `ByteDance` | `180.184.2.2`, `180.184.1.1` |
+| `China` | Alibaba + Tencent combined |
+| `Global` | Cloudflare, Google DNS |
 
 ### DNS Forward Rules
 
-| Match | Target |
-|:-----:|:------:|
-| `*.cn` | Bootstrap (China DNS) |
-| `*` | DoH Public |
+| Match | Target | Description |
+|:-----:|:------:|:-----------|
+| `proxy_rule_set` (reject list) | AdBlack | Ad blocking DNS |
+| `proxy_rule_set` (Alibaba) | Alibaba | Alibaba services |
+| `proxy_rule_set` (Tencent) | Tencent | Tencent services |
+| `proxy_rule_set` (DouYin) | ByteDance | ByteDance services |
+| `proxy_rule_set` (Apple) | China | Apple services |
+| `proxy_rule_set` (ChinaMax) | China | China domains |
+| `proxy_rule_set` (Global) | Global | International domains |
+| `*` | Global | Default fallback |
 
 ### DNS Hijack
 
-Targets: `8.8.8.8:53`, `8.8.4.4.4:53` (Google DNS hijacked to prevent leakage)
+All DNS queries (`*:53`) are hijacked to prevent leakage.
 
 ### Host Mapping
 
@@ -93,42 +106,44 @@ Targets: `8.8.8.8:53`, `8.8.4.4.4:53` (Google DNS hijacked to prevent leakage)
 
 | Group | Type | Description |
 |:-----:|:----:|:-----------|
-| `Mainland` | `select` | China Direct |
-| `NoAuto` | `select` | Main entry point |
+| `AllServer` | `external` | All subscription nodes (auto-filter) |
 | `Automatic` | `auto_test` | Regional auto-select |
-| `AllServer` | `select` | All subscription nodes |
 | `Proxy` | `select` | Proxy policy |
+| `NoAuto` | `select` | Main entry point |
+| `Mainland` | `select` | China Direct |
 
-### Regional Groups (Auto Test)
+### Regional Groups (Select + Flatten)
 
-| Group | Filter | Interval | Tolerance |
-|:-----:|:------:|:--------:|:---------:|
-| `Hong Kong` | `HK\|Hong\|香港\|港` | 300s | 50ms |
-| `Taiwan` | `TW\|Tai\|台湾\|台` | 300s | 50ms |
-| `Japan` | `JP\|Japan\|日本\|日` | 300s | 50ms |
-| `Singapore` | `SG\|Singapore\|新加坡\|狮城` | 300s | 50ms |
-| `United States` | `US\|States\|美国\|美` | 300s | 50ms |
-| `United Kingdom` | `UK\|United Kingdom\|英国` | 300s | 50ms |
-| `Korea` | `KR\|Korea\|韩国\|韩` | 300s | 50ms |
-| `Other` | Exclude above | 300s | 50ms |
+| Group | Filter Keywords | Emoji |
+|:-----:|:---------------:|:-----:|
+| `Hong Kong` | HK, Hong Kong, HKG | 🇭🇰 |
+| `Taiwan` | TW, Taiwan, TWN | 🇹🇼 |
+| `Japan` | JP, Japan, JPN | 🇯🇵 |
+| `Singapore` | SG, Singapore, SGP | 🇸🇬 |
+| `United States` | US, USA, States, American | 🇺🇸 |
+| `United Kingdom` | UK, England, Britain | 🇬🇧 |
+| `Korea` | KR, Korea, KOR | 🇰🇷 |
+| `Other` | Exclude above regions | 🌍 |
+
+All regional groups use `flatten: true` + `filter` from AllServer, with `update_interval: 86400` (daily refresh).
 
 ### Service Groups
 
-| Group | Default | Purpose |
-|:-----:|:-------:|:-------|
-| `AI` | Automatic | ChatGPT, Claude, Gemini, Bing |
-| `Apple` | Mainland - HK - US | Apple services |
-| `Microsoft` | Mainland - HK - SG - US | Microsoft services |
-| `OneDrive` | Mainland - HK - SG - US | Cloud storage |
-| `Telegram` | Automatic - SG - US - HK | Messaging |
-| `X` | Automatic - HK - TW - SG - JP - US | Twitter / X |
-| `WeChat` | Mainland - HK - SG - US | WeChat |
-| `Netflix` | HK - TW - SG - JP - US | Netflix streaming |
-| `Disney+` | HK - SG | Disney+ streaming |
-| `YouTube` | Automatic - HK - TW - SG - JP - US | YouTube streaming |
-| `TikTok` | TW - SG - JP - US | TikTok unlock |
-| `Bilibili` | Mainland - HK - TW | Bilibili (HK/TW unlock) |
-| `Speedtest` | Mainland - Auto - AllServer | Speed test |
+| Group | Policies | Purpose |
+|:-----:|:--------:|:-------|
+| `AI` | Automatic, US, JP, SG | ChatGPT, Claude, Gemini, Bing |
+| `Apple` | Mainland, HK, US | Apple services |
+| `Microsoft` | Mainland, HK, SG, US | Microsoft services |
+| `OneDrive` | Mainland, HK, SG, US | Cloud storage |
+| `Telegram` | Automatic, SG, US, HK, TW, JP | Messaging |
+| `X` | Automatic, HK, TW, SG, JP, US | Twitter / X |
+| `WeChat` | Mainland, HK, SG, US | WeChat |
+| `Netflix` | HK, TW, SG, JP, US | Netflix streaming |
+| `Disney+` | HK, SG | Disney+ streaming |
+| `YouTube` | Automatic, HK, TW, SG, JP, US | YouTube streaming |
+| `TikTok` | TW, SG, JP, US | TikTok unlock |
+| `Bilibili` | Mainland, HK, TW | Bilibili (HK/TW unlock) |
+| `Speedtest` | Mainland, Automatic, AllServer | Speed test |
 
 ---
 
@@ -148,7 +163,8 @@ Targets: `8.8.8.8:53`, `8.8.4.4.4:53` (Google DNS hijacked to prevent leakage)
 11. CN Rules          SKK + ChinaMax ruleset
 12. Global Rules      CDN, Global ruleset
 13. LAN               Local network > DIRECT
-14. Final Rule        default > NoAuto
+14. GeoIP             CN > Mainland
+15. Final Rule        default > NoAuto
 ```
 
 ---
@@ -169,37 +185,14 @@ Targets: `8.8.8.8:53`, `8.8.4.4.4:53` (Google DNS hijacked to prevent leakage)
 
 ---
 
-## Special Features
-
-### URL Rewrite
-
-| Original | Target | Status |
-|:--------:|:------:|:------:|
-| `google.cn` | `google.com` | 302 |
-| `maps.google.cn` | `maps.google.com` | 302 |
-| `taobao.com` | HTTPS | 302 |
-| `jd.com` | HTTPS | 302 |
-| `mi.com` | HTTPS | 302 |
-| `you.163.com` | HTTPS | 302 |
-| `suning.com` | HTTPS | 302 |
-| `yhd.com` | HTTPS | 302 |
-| `api.abema.io` | Reject | -1 |
-
-### Header Rewrite
-
-| Target | Header | Value | Type |
-|:------:|:------:|:-----:|:----:|
-| `github.com` | Accept-Language | en-us | request |
-| `*.githubusercontent.com` | Accept-Language | en-us | request |
-
-Fixes GitHub 429 rate limit issue.
-
-### MITM Hostnames
+## MITM Hostnames
 
 - `www.google.cn`
 - `api.abema.io`
 - `*.zhihu.com`
 - `sub.store`
+
+MITM is required for URL rewrite and header rewrite features.
 
 ---
 
@@ -223,66 +216,19 @@ Fixes GitHub 429 rate limit issue.
 
 ### Configure Subscription
 
-Replace the placeholder URL in all `external` policy groups:
+Replace the placeholder URL in the `AllServer` external group:
 
 ```yaml
-policy_groups:
-  - external:
-      name: AllServer
-      type: select
-      urls:
-        - "https://your-subscription-url"
+- external:
+    name: AllServer
+    type: select
+    urls:
+      - "https://your-subscription-url"
+    filter: '^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量).)+$'
+    update_interval: 86400
 ```
 
-Update the `urls` field in every `external` group (Hong Kong, Taiwan, Japan, Singapore, United States, United Kingdom, Korea, Other).
-
----
-
-## Configuration
-
-### Add Proxy Servers
-
-Edit the `proxies` section:
-
-```yaml
-proxies:
-  - shadowsocks:
-      name: MySS
-      method: aes-256-gcm
-      password: your_password
-      server: 1.2.3.4
-      port: 8388
-
-  - trojan:
-      name: MyTrojan
-      server: example.com
-      port: 443
-      password: your_password
-
-  - vmess:
-      name: MyVMess
-      server: 1.2.3.4
-      port: 443
-      user_id: uuid
-      security: auto
-
-  - hysteria2:
-      name: MyHysteria2
-      server: 1.2.3.4
-      port: 443
-      auth: your_password
-```
-
-### Enable MITM
-
-```yaml
-mitm:
-  ca_p12: "your_base64_cert"
-  ca_passphrase: "123456"
-  hostnames:
-    includes:
-      - "*.example.com"
-```
+Only the `AllServer` group needs the subscription URL. Regional groups automatically pull nodes from AllServer via `flatten: true`.
 
 ---
 
@@ -295,6 +241,7 @@ mitm:
 | [VirgilClyne](https://github.com/VirgilClyne/GetSomeFries) | ASN rules |
 | [Semporia](https://github.com/Semporia/TikTok-Unlock) | TikTok unlock |
 | [zxfccmm4](https://github.com/zxfccmm4) | Unbreak rules |
+| [Loyalsoldier](https://github.com/Loyalsoldier/surge-rules) | Reject ruleset |
 
 ---
 
@@ -302,11 +249,12 @@ mitm:
 
 | Item | Description |
 |:----:|:-----------|
-| Subscription | Replace with your own subscription URL |
-| Rule Update | Rules auto-update from online sources |
+| Subscription | Replace with your own subscription URL in AllServer |
+| Rule Update | Rules and nodes auto-update from online sources |
 | Speed Test | 300s interval, 3s timeout, 50ms tolerance |
-| MITM Cert | Required for URL/header rewrite |
 | Node Filter | Auto-filter nodes with "traffic/reset/expire" keywords |
+| DNS Hijack | All DNS queries hijacked to prevent leakage |
+| Ad Blocking | AdBlack DNS + reject rule set for comprehensive blocking |
 
 ---
 

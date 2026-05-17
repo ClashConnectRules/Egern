@@ -174,6 +174,7 @@ policy_groups:
     - Japan
     - United States
     - United Kingdom
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png
     hidden: false
 - select:
@@ -181,6 +182,7 @@ policy_groups:
     policies:
     - Mainland
     - Automatic
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning.png
     hidden: false
 - select:
@@ -189,6 +191,7 @@ policy_groups:
     - Mainland
     - Hong Kong
     - United States
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/apple.png
     hidden: false
 - select:
@@ -198,6 +201,7 @@ policy_groups:
     - United States
     - Japan
     - Singapore
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/chatgpt(1).png
     hidden: false
 - select:
@@ -207,6 +211,7 @@ policy_groups:
     - Hong Kong
     - Singapore
     - United States
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/microsoft.png
     hidden: false
 - select:
@@ -216,6 +221,7 @@ policy_groups:
     - Hong Kong
     - Singapore
     - United States
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/OneDrive.png
     hidden: false
 - select:
@@ -227,6 +233,7 @@ policy_groups:
     - Hong Kong
     - Taiwan
     - Japan
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/telegram.png
     hidden: false
 - select:
@@ -236,6 +243,7 @@ policy_groups:
     - Hong Kong
     - Singapore
     - United States
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/wechat.png
     hidden: false
 - select:
@@ -247,6 +255,7 @@ policy_groups:
     - Singapore
     - Japan
     - United States
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/twitter.png
     hidden: false
 - select:
@@ -255,6 +264,7 @@ policy_groups:
     - Mainland
     - Hong Kong
     - Taiwan
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/bilibili.png
     hidden: false
 - select:
@@ -262,6 +272,7 @@ policy_groups:
     policies:
     - Hong Kong
     - Singapore
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/disney.png
     hidden: false
 - select:
@@ -272,6 +283,7 @@ policy_groups:
     - Singapore
     - Japan
     - United States
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/netflix.png
     hidden: false
 - select:
@@ -281,6 +293,7 @@ policy_groups:
     - Singapore
     - Japan
     - United States
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/tiktok.png
     hidden: false
 - select:
@@ -292,6 +305,7 @@ policy_groups:
     - Singapore
     - Japan
     - United States
+    - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/Youtube.png
     hidden: false
 - select:

@@ -37,11 +37,12 @@
 
 | 设置项 | 值 | 说明 |
 |:-------:|:-----:|:-----------|
-| HTTP 端口 | `6152` | HTTP 代理端口 |
-| SOCKS5 端口 | `6153` | SOCKS5 代理端口 |
-| IPv6 | `false` | 默认禁用 |
-| QUIC 拦截 | `false` | 未启用 |
-| GeoIP | [Hackl0us GeoIP2-CN](https://github.com/Hackl0us/GeoIP2-CN) | 中国 GeoIP 数据库 |
+| IPv6 | `true` | 已启用 |
+| VIF Only | `true` | 虚拟接口模式 |
+| DNS 劫持 | `*:53` | 劫持所有 DNS 查询 |
+| GeoIP | [Masaiki GeoIP2-CN](https://github.com/Masaiki/GeoIP2-CN) | 中国 GeoIP 数据库 |
+| ASN DB | [P3TERX GeoLite](https://github.com/P3TERX/GeoLite.mmdb) | ASN 数据库 |
+| 延迟测试 | `http://wifi.vivo.com.cn/generate_204` | 直连延迟测试 URL |
 
 ---
 
@@ -52,26 +53,38 @@
 | 服务器 | 提供商 |
 |:------:|:--------:|
 | `223.5.5.5` | 阿里云 |
-| `223.6.6.6` | 阿里云 |
 | `119.29.29.29` | 腾讯 |
+| `1.12.12.12` | 阿里云（新） |
+| `120.53.53.53` | 字节跳动 |
+| `2400:3200::1` | CNNIC (IPv6) |
 
 ### DoH 上游
 
-| 名称 | URL |
-|:----:|:-----|
-| `alidns` | `https://dns.alidns.com/dns-query` |
-| `dohpub` | `https://doh.pub/dns-query` |
+| 名称 | 服务器 |
+|:----:|:--------|
+| `AdBlack` | `quic://dns.adguard-dns.com`、`https://dns.adguard-dns.com/dns-query` |
+| `Alibaba` | `223.5.5.5`、`https://dns.alidns.com/dns-query` |
+| `Tencent` | `119.29.29.29`、`https://doh.pub/dns-query` |
+| `ByteDance` | `180.184.2.2`、`180.184.1.1` |
+| `China` | 阿里云 + 腾讯组合 |
+| `Global` | Cloudflare、Google DNS |
 
 ### DNS 转发规则
 
-| 匹配 | 目标 |
-|:-----:|:------:|
-| `*.cn` | Bootstrap（国内 DNS） |
-| `*` | DoH Public |
+| 匹配 | 目标 | 说明 |
+|:-----:|:------:|:-----------|
+| `proxy_rule_set`（拒绝列表） | AdBlack | 广告过滤 DNS |
+| `proxy_rule_set`（阿里云） | Alibaba | 阿里服务 |
+| `proxy_rule_set`（腾讯） | Tencent | 腾讯服务 |
+| `proxy_rule_set`（抖音） | ByteDance | 字节服务 |
+| `proxy_rule_set`（Apple） | China | 苹果服务 |
+| `proxy_rule_set`（ChinaMax） | China | 国内域名 |
+| `proxy_rule_set`（Global） | Global | 国际域名 |
+| `*` | Global | 默认兜底 |
 
 ### DNS 劫持
 
-劫持目标：`8.8.8.8:53`、`8.8.4.4.4:53`（Google DNS，防止泄露）
+所有 DNS 查询（`*:53`）被劫持以防止泄露。
 
 ### Host 映射
 
@@ -93,42 +106,44 @@
 
 | 分组 | 类型 | 描述 |
 |:-----:|:----:|:-----------|
-| `Mainland` | `select` | 中国大陆直连 |
-| `NoAuto` | `select` | 主入口 |
+| `AllServer` | `external` | 全部订阅节点（自动过滤） |
 | `Automatic` | `auto_test` | 地区自动选择 |
-| `AllServer` | `select` | 全部订阅节点 |
 | `Proxy` | `select` | 代理策略 |
+| `NoAuto` | `select` | 主入口 |
+| `Mainland` | `select` | 中国大陆直连 |
 
-### 地区分组（自动测速）
+### 地区分组（Select + Flatten）
 
-| 分组 | 过滤 | 间隔 | 容差 |
-|:-----:|:------:|:--------:|:---------:|
-| `Hong Kong` | `HK\|Hong\|香港\|港` | 300s | 50ms |
-| `Taiwan` | `TW\|Tai\|台湾\|台` | 300s | 50ms |
-| `Japan` | `JP\|Japan\|日本\|日` | 300s | 50ms |
-| `Singapore` | `SG\|Singapore\|新加坡\|狮城` | 300s | 50ms |
-| `United States` | `US\|States\|美国\|美` | 300s | 50ms |
-| `United Kingdom` | `UK\|United Kingdom\|英国` | 300s | 50ms |
-| `Korea` | `KR\|Korea\|韩国\|韩` | 300s | 50ms |
-| `Other` | 排除以上 | 300s | 50ms |
+| 分组 | 过滤关键词 | Emoji |
+|:-----:|:---------:|:-----:|
+| `Hong Kong` | HK、Hong Kong、HKG | 🇭🇰 |
+| `Taiwan` | TW、Taiwan、TWN | 🇹🇼 |
+| `Japan` | JP、Japan、JPN | 🇯🇵 |
+| `Singapore` | SG、Singapore、SGP | 🇸🇬 |
+| `United States` | US、USA、States、American | 🇺🇸 |
+| `United Kingdom` | UK、England、Britain | 🇬🇧 |
+| `Korea` | KR、Korea、KOR | 🇰🇷 |
+| `Other` | 排除以上地区 | 🌍 |
+
+所有地区组使用 `flatten: true` + `filter` 从 AllServer 拉取节点，`update_interval: 86400`（每天刷新）。
 
 ### 服务分组
 
-| 分组 | 默认 | 用途 |
-|:-----:|:-------:|:-------|
-| `AI` | Automatic | ChatGPT、Claude、Gemini、Bing |
-| `Apple` | Mainland - HK - US | 苹果服务 |
-| `Microsoft` | Mainland - HK - SG - US | 微软服务 |
-| `OneDrive` | Mainland - HK - SG - US | 云存储 |
-| `Telegram` | Automatic - SG - US - HK | 电报 |
-| `X` | Automatic - HK - TW - SG - JP - US | Twitter / X |
-| `WeChat` | Mainland - HK - SG - US | 微信 |
-| `Netflix` | HK - TW - SG - JP - US | Netflix 流媒体 |
-| `Disney+` | HK - SG | Disney+ 流媒体 |
-| `YouTube` | Automatic - HK - TW - SG - JP - US | YouTube 流媒体 |
-| `TikTok` | TW - SG - JP - US | TikTok 解锁 |
-| `Bilibili` | Mainland - HK - TW | 哔哩哔哩（港台解锁） |
-| `Speedtest` | Mainland - Auto - AllServer | 网速测试 |
+| 分组 | 策略 | 用途 |
+|:-----:|:----:|:-------|
+| `AI` | Automatic、US、JP、SG | ChatGPT、Claude、Gemini、Bing |
+| `Apple` | Mainland、HK、US | 苹果服务 |
+| `Microsoft` | Mainland、HK、SG、US | 微软服务 |
+| `OneDrive` | Mainland、HK、SG、US | 云存储 |
+| `Telegram` | Automatic、SG、US、HK、TW、JP | 电报 |
+| `X` | Automatic、HK、TW、SG、JP、US | Twitter / X |
+| `WeChat` | Mainland、HK、SG、US | 微信 |
+| `Netflix` | HK、TW、SG、JP、US | Netflix 流媒体 |
+| `Disney+` | HK、SG | Disney+ 流媒体 |
+| `YouTube` | Automatic、HK、TW、SG、JP、US | YouTube 流媒体 |
+| `TikTok` | TW、SG、JP、US | TikTok 解锁 |
+| `Bilibili` | Mainland、HK、TW | 哔哩哔哩（港台解锁） |
+| `Speedtest` | Mainland、Automatic、AllServer | 网速测试 |
 
 ---
 
@@ -148,7 +163,8 @@
 11. 国内规则        SKK + ChinaMax 规则集
 12. 国外规则        CDN、Global 规则集
 13. 本地网络        局域网 > DIRECT
-14. 兜底规则        default > NoAuto
+14. GeoIP           CN > Mainland
+15. 兜底规则        default > NoAuto
 ```
 
 ---
@@ -169,37 +185,14 @@
 
 ---
 
-## 特殊功能
-
-### URL 重写
-
-| 原地址 | 目标 | 状态码 |
-|:--------:|:------:|:------:|
-| `google.cn` | `google.com` | 302 |
-| `maps.google.cn` | `maps.google.com` | 302 |
-| `taobao.com` | HTTPS | 302 |
-| `jd.com` | HTTPS | 302 |
-| `mi.com` | HTTPS | 302 |
-| `you.163.com` | HTTPS | 302 |
-| `suning.com` | HTTPS | 302 |
-| `yhd.com` | HTTPS | 302 |
-| `api.abema.io` | 拒绝 | -1 |
-
-### 请求头重写
-
-| 目标 | 头部 | 值 | 类型 |
-|:------:|:------:|:-----:|:----:|
-| `github.com` | Accept-Language | en-us | request |
-| `*.githubusercontent.com` | Accept-Language | en-us | request |
-
-修复 GitHub 429 速率限制问题。
-
-### MITM 主机名
+## MITM 主机名
 
 - `www.google.cn`
 - `api.abema.io`
 - `*.zhihu.com`
 - `sub.store`
+
+MITM 是 URL 重写和请求头重写功能的前提。
 
 ---
 
@@ -223,66 +216,19 @@
 
 ### 配置订阅
 
-替换所有 `external` 策略组中的占位 URL：
+替换 `AllServer` 外部组中的占位 URL：
 
 ```yaml
-policy_groups:
-  - external:
-      name: AllServer
-      type: select
-      urls:
-        - "https://your-subscription-url"
+- external:
+    name: AllServer
+    type: select
+    urls:
+      - "https://your-subscription-url"
+    filter: '^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量).)+$'
+    update_interval: 86400
 ```
 
-需要更新每个 `external` 分组（Hong Kong、Taiwan、Japan、Singapore、United States、United Kingdom、Korea、Other）的 `urls` 字段。
-
----
-
-## 配置
-
-### 添加代理服务器
-
-编辑 `proxies` 部分：
-
-```yaml
-proxies:
-  - shadowsocks:
-      name: MySS
-      method: aes-256-gcm
-      password: your_password
-      server: 1.2.3.4
-      port: 8388
-
-  - trojan:
-      name: MyTrojan
-      server: example.com
-      port: 443
-      password: your_password
-
-  - vmess:
-      name: MyVMess
-      server: 1.2.3.4
-      port: 443
-      user_id: uuid
-      security: auto
-
-  - hysteria2:
-      name: MyHysteria2
-      server: 1.2.3.4
-      port: 443
-      auth: your_password
-```
-
-### 启用 MITM
-
-```yaml
-mitm:
-  ca_p12: "your_base64_cert"
-  ca_passphrase: "123456"
-  hostnames:
-    includes:
-      - "*.example.com"
-```
+只需配置 `AllServer` 的订阅 URL。地区组通过 `flatten: true` 自动从 AllServer 拉取节点。
 
 ---
 
@@ -295,6 +241,7 @@ mitm:
 | [VirgilClyne](https://github.com/VirgilClyne/GetSomeFries) | ASN 规则 |
 | [Semporia](https://github.com/Semporia/TikTok-Unlock) | TikTok 解锁 |
 | [zxfccmm4](https://github.com/zxfccmm4) | Unbreak 规则 |
+| [Loyalsoldier](https://github.com/Loyalsoldier/surge-rules) | 拒绝规则集 |
 
 ---
 
@@ -302,11 +249,12 @@ mitm:
 
 | 项目 | 描述 |
 |:----:|:-----------|
-| 订阅链接 | 需替换为您的订阅地址 |
-| 规则更新 | 规则从在线源自动更新 |
+| 订阅链接 | 在 AllServer 中替换为您的订阅地址 |
+| 规则更新 | 规则和节点从在线源自动更新 |
 | 测速设置 | 300s 间隔、3s 超时、50ms 容差 |
-| MITM 证书 | URL / 请求头重写需要安装证书 |
 | 节点过滤 | 自动过滤包含"流量/重置/过期"关键词的节点 |
+| DNS 劫持 | 所有 DNS 查询被劫持以防止泄露 |
+| 广告拦截 | AdBlack DNS + 拒绝规则集双重拦截 |
 
 ---
 
