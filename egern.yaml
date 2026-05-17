@@ -1,0 +1,789 @@
+# Egern Configuration
+# Converted from Surge.conf
+
+# ==================== Global Settings / 全局设置 ====================
+ipv6: false
+http_port: 6152
+socks_port: 6153
+allow_external_connections: false
+vif_only: false
+block_quic: false
+hide_vpn_icon: false
+compat_route: false
+include_all_networks: false
+include_local_networks: false
+
+geoip_db_url: "https://github.com/Hackl0us/GeoIP2-CN/raw/release/Country.mmdb"
+
+proxy_latency_test_url: "http://captive.apple.com/generate_204"
+direct_latency_test_url: "http://connectivitycheck.gstatic.com/generate_204"
+
+bypass_tunnel_proxy:
+  - "localhost"
+  - "*.local"
+  - "captive.apple.com"
+  - "guzzoni.apple.com"
+  - "0.0.0.0/8"
+  - "10.0.0.0/8"
+  - "17.0.0.0/8"
+  - "100.64.0.0/10"
+  - "127.0.0.0/8"
+  - "169.254.0.0/16"
+  - "172.16.0.0/12"
+  - "192.0.0.0/24"
+  - "192.0.2.0/24"
+  - "192.168.0.0/16"
+  - "192.88.99.0/24"
+  - "198.18.0.0/15"
+  - "198.51.100.0/24"
+  - "203.0.113.0/24"
+  - "224.0.0.0/4"
+  - "240.0.0.0/4"
+  - "255.255.255.255/32"
+
+real_ip_domains:
+  - "link-ip.nextdns.io"
+  - "*.msftconnecttest.com"
+  - "*.msftncsi.com"
+  - "*.srv.nintendo.net"
+  - "*.stun.playstation.net"
+  - "xbox.*.microsoft.com"
+  - "*.xboxlive.com"
+  - "*.logon.battlenet.com.cn"
+  - "*.logon.battle.net"
+  - "stun.l.google.com"
+
+hijack_dns:
+  - "8.8.8.8:53"
+  - "8.8.4.4:53"
+
+# ==================== DNS / 域名系统 ====================
+dns:
+  bootstrap:
+    - "223.5.5.5"
+    - "223.6.6.6"
+    - "119.29.29.29"
+
+  upstreams:
+    alidns:
+      - "https://dns.alidns.com/dns-query"
+    dohpub:
+      - "https://doh.pub/dns-query"
+
+  forward:
+    - domain_suffix:
+        match: "cn"
+        value: bootstrap
+    - wildcard:
+        match: "*.cn"
+        value: bootstrap
+    - wildcard:
+        match: "*"
+        value: dohpub
+
+  hosts:
+    "*.taobao.com": "223.5.5.5"
+    "*.tmall.com": "223.5.5.5"
+    "*.alipay.com": "223.5.5.5"
+    "*.alicdn.com": "223.5.5.5"
+    "*.aliyun.com": "223.5.5.5"
+    "*.jd.com": "119.28.28.28"
+    "*.qq.com": "119.28.28.28"
+    "*.tencent.com": "119.28.28.28"
+    "*.weixin.com": "119.28.28.28"
+    "*.bilibili.com": "119.29.29.29"
+    "hdslb.com": "119.29.29.29"
+    "*.163.com": "119.29.29.29"
+    "*.126.com": "119.29.29.29"
+    "*.126.net": "119.29.29.29"
+    "*.127.net": "119.29.29.29"
+    "*.netease.com": "119.29.29.29"
+    "*.mi.com": "119.29.29.29"
+    "*.xiaomi.com": "119.29.29.29"
+    "testflight.apple.com": "8.8.4.4"
+    "mtalk.google.com": "108.177.125.188"
+    "dl.google.com": "119.29.29.29"
+    "dl.l.google.com": "119.29.29.29"
+    "update.googleapis.com": "119.29.29.29"
+    "amplifi.lan": system
+    "router.synology.com": system
+    "sila.razer.com": system
+    "router.asus.com": system
+    "routerlogin.net": system
+    "orbilogin.com": system
+    "www.LinksysSmartWiFi.com": system
+    "LinksysSmartWiFi.com": system
+    "myrouter.local": system
+    "www.miwifi.com": system
+    "miwifi.com": system
+    "mediarouter.home": system
+    "tplogin.cn": system
+    "tplinklogin.net": system
+    "melogin.cn": system
+    "falogin.cn": system
+
+# ==================== Proxies / 代理 ====================
+# Add your proxies here / 在此添加代理
+proxies: []
+
+# ==================== Policy Groups / 策略组 ====================
+policy_groups:
+  # ==================== 核心策略分组 / Core Policy Groups ====================
+  - select:
+      name: Mainland
+      policies:
+        - DIRECT
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/direct.png"
+
+  - external:
+      name: AllServer
+      type: select
+      urls:
+        - "Your Surge subscription link goes here"
+      filter: "^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量).)+$"
+      update_interval: 86400
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png"
+
+  # ==================== 地区自动选择组 / Region Auto-Select Groups ====================
+  - external:
+      name: Hong Kong
+      type: auto_test
+      urls:
+        - "Your Surge subscription link goes here"
+      filter: "港|🇭🇰|香港|HK|Hong"
+      interval: 300
+      tolerance: 50
+      timeout: 3
+      update_interval: 86400
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Hongkong.png"
+
+  - external:
+      name: Taiwan
+      type: auto_test
+      urls:
+        - "Your Surge subscription link goes here"
+      filter: "台|🇹🇼|台湾|TW|Tai"
+      interval: 300
+      tolerance: 50
+      timeout: 3
+      update_interval: 86400
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/taiwan.png"
+
+  - external:
+      name: Japan
+      type: auto_test
+      urls:
+        - "Your Surge subscription link goes here"
+      filter: "日|🇯🇵|日本|JP|Japan"
+      interval: 300
+      tolerance: 50
+      timeout: 3
+      update_interval: 86400
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Japan.png"
+
+  - external:
+      name: Singapore
+      type: auto_test
+      urls:
+        - "Your Surge subscription link goes here"
+      filter: "坡|🇸🇬|新加坡|狮城|SG|Singapore"
+      interval: 300
+      tolerance: 50
+      timeout: 3
+      update_interval: 86400
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/singapore.png"
+
+  - external:
+      name: United States
+      type: auto_test
+      urls:
+        - "Your Surge subscription link goes here"
+      filter: "美|🇺🇸|美国|US|States|American"
+      interval: 300
+      tolerance: 50
+      timeout: 3
+      update_interval: 86400
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/US.png"
+
+  - external:
+      name: United Kingdom
+      type: auto_test
+      urls:
+        - "Your Surge subscription link goes here"
+      filter: "🇬🇧|英国|英|英格兰|UK|United Kingdom"
+      interval: 300
+      tolerance: 50
+      timeout: 3
+      update_interval: 86400
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/UnitedKingdom.png"
+
+  - external:
+      name: Korea
+      type: auto_test
+      urls:
+        - "Your Surge subscription link goes here"
+      filter: "韩|韩国|Korea|KR|🇰🇷"
+      interval: 300
+      tolerance: 50
+      timeout: 3
+      update_interval: 86400
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Korea.png"
+
+  - external:
+      name: Other
+      type: auto_test
+      urls:
+        - "Your Surge subscription link goes here"
+      filter: "^((?!港|🇭🇰|香港|HK|Hong|台|🇹🇼|台湾|TW|Tai|日|🇯🇵|日本|JP|Japan|坡|🇸🇬|新加坡|狮城|SG|Singapore|美|🇺🇸|美国|US|States|American|🇬🇧|英国|英|英格兰|UK|United Kingdom|韩|韩国|Korea|KR|🇰🇷|Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量).)+$"
+      interval: 300
+      tolerance: 50
+      timeout: 3
+      update_interval: 86400
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/EuropeanUnion.png"
+
+  # ==================== 组合策略 / Combined Policies ====================
+  - auto_test:
+      name: Automatic
+      policies:
+        - Hong Kong
+        - Taiwan
+        - Japan
+        - Singapore
+        - United States
+        - United Kingdom
+        - Korea
+      interval: 300
+      tolerance: 50
+      timeout: 3
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(5).png"
+
+  - select:
+      name: Proxy
+      policies:
+        - Automatic
+        - Hong Kong
+        - Taiwan
+        - Singapore
+        - Japan
+        - United States
+        - United Kingdom
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png"
+
+  - select:
+      name: NoAuto
+      policies:
+        - Mainland
+        - Automatic
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning.png"
+
+  # ==================== 应用服务策略 / App Service Policies ====================
+  # --- 苹果服务 / Apple Services ---
+  - select:
+      name: Apple
+      policies:
+        - Mainland
+        - Hong Kong
+        - United States
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/apple.png"
+
+  # --- AI 服务 / AI Services ---
+  - select:
+      name: AI
+      policies:
+        - Automatic
+        - United States
+        - Japan
+        - Singapore
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/chatgpt(1).png"
+
+  # --- 微软服务 / Microsoft Services ---
+  - select:
+      name: Microsoft
+      policies:
+        - Mainland
+        - Hong Kong
+        - Singapore
+        - United States
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/microsoft.png"
+
+  - select:
+      name: OneDrive
+      policies:
+        - Mainland
+        - Hong Kong
+        - Singapore
+        - United States
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/OneDrive.png"
+
+  # --- 社交通讯 / Social & Messaging ---
+  - select:
+      name: Telegram
+      policies:
+        - Automatic
+        - Singapore
+        - United States
+        - Hong Kong
+        - Taiwan
+        - Japan
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/telegram.png"
+
+  - select:
+      name: WeChat
+      policies:
+        - Mainland
+        - Hong Kong
+        - Singapore
+        - United States
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/wechat.png"
+
+  - select:
+      name: X
+      policies:
+        - Automatic
+        - Hong Kong
+        - Taiwan
+        - Singapore
+        - Japan
+        - United States
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/twitter.png"
+
+  # --- 流媒体服务 / Streaming Services ---
+  - select:
+      name: Bilibili
+      policies:
+        - Mainland
+        - Hong Kong
+        - Taiwan
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/bilibili.png"
+
+  - select:
+      name: Disney+
+      policies:
+        - Hong Kong
+        - Singapore
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/disney.png"
+
+  - select:
+      name: Netflix
+      policies:
+        - Hong Kong
+        - Taiwan
+        - Singapore
+        - Japan
+        - United States
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/netflix.png"
+
+  - select:
+      name: TikTok
+      policies:
+        - Taiwan
+        - Singapore
+        - Japan
+        - United States
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/tiktok.png"
+
+  - select:
+      name: YouTube
+      policies:
+        - Automatic
+        - Hong Kong
+        - Taiwan
+        - Singapore
+        - Japan
+        - United States
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/Youtube.png"
+
+  # --- 工具服务 / Utility Services ---
+  - select:
+      name: Speedtest
+      policies:
+        - Mainland
+        - Automatic
+        - AllServer
+      icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/speedtest.png"
+
+# ==================== Rules / 规则 ====================
+rules:
+  # >> 规则修正 (Unbreak Rules)
+  - rule_set:
+      match: "https://raw.githubusercontent.com/zxfccmm4/Profiles/refs/heads/main/Surge/Ruleset/Unbreak.list"
+      policy: DIRECT
+
+  # >> 广告拦截 (Ad Blocking)
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/domainset/reject.conf"
+      policy: REJECT
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/reject-drop.conf"
+      policy: REJECT
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/reject.conf"
+      policy: REJECT
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/reject.conf"
+      policy: REJECT
+
+  # >> 隐私保护 (Privacy Protection)
+  - domain:
+      match: "app-site-association.cdn-apple.com"
+      policy: REJECT
+  - domain:
+      match: "prpr.96110.cn.com"
+      policy: DIRECT
+  - domain_keyword:
+      match: "96110"
+      policy: REJECT
+  - domain_suffix:
+      match: "gjfzpt.cn"
+      policy: REJECT
+
+  # >> 国内应用 (Mainland Apps)
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/WeChat/WeChat.list"
+      policy: WeChat
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/neteasemusic.conf"
+      policy: Mainland
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/neteasemusic.conf"
+      policy: Mainland
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list"
+      policy: Bilibili
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Weibo/Weibo.list"
+      policy: Mainland
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XiaoHongShu/XiaoHongShu.list"
+      policy: Mainland
+
+  # >> Apple 服务 (Apple Services)
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/AppStore/AppStore.list"
+      policy: DIRECT
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/AppleNews/AppleNews.list"
+      policy: "United States"
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/domainset/apple_cdn.conf"
+      policy: Apple
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/AppleTV/AppleTV.list"
+      policy: Apple
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Apple/Apple.list"
+      policy: Apple
+
+  # >> AI 服务 (AI Services)
+  - domain_keyword:
+      match: "diabrowser.engineering"
+      policy: AI
+  - domain_suffix:
+      match: "apple-relay.apple.com"
+      policy: AI
+  - domain_suffix:
+      match: "apple-relay.cloudflare.com"
+      policy: AI
+  - domain_keyword:
+      match: "apple-relay"
+      policy: AI
+  - domain_suffix:
+      match: "googleapis.com"
+      policy: AI
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/ai.conf"
+      policy: AI
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Bing/Bing.list"
+      policy: AI
+  - domain_suffix:
+      match: "diabrowser.engineering"
+      policy: AI
+
+  # >> 国外流媒体 (International Streaming)
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Disney/Disney.list"
+      policy: "Disney+"
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Netflix/Netflix.list"
+      policy: Netflix
+  - rule_set:
+      match: "https://raw.githubusercontent.com/Semporia/TikTok-Unlock/master/Surge/TikTok.list"
+      policy: TikTok
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/YouTube/YouTube.list"
+      policy: YouTube
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GoogleSearch/GoogleSearch.list"
+      policy: YouTube
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Emby/Emby.list"
+      policy: Automatic
+
+  # >> 地区流媒体解锁 (Regional Streaming Unlock)
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/stream_us.conf"
+      policy: "United States"
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/stream_us.conf"
+      policy: "United States"
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/stream_eu.conf"
+      policy: "United Kingdom"
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/stream_eu.conf"
+      policy: "United Kingdom"
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/stream_jp.conf"
+      policy: Japan
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/stream_jp.conf"
+      policy: Japan
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/stream_kr.conf"
+      policy: Korea
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/stream_kr.conf"
+      policy: Korea
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/stream_hk.conf"
+      policy: "Hong Kong"
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/stream_hk.conf"
+      policy: "Hong Kong"
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/stream_tw.conf"
+      policy: Taiwan
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/stream_tw.conf"
+      policy: Taiwan
+
+  # >> 国外社交媒体 (International Social Media)
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Twitter/Twitter.list"
+      policy: X
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/telegram.conf"
+      policy: Telegram
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/telegram.conf"
+      policy: Telegram
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/telegram_asn.conf"
+      policy: Telegram
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Facebook/Facebook.list"
+      policy: Automatic
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Instagram/Instagram.list"
+      policy: Automatic
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Threads/Threads.list"
+      policy: Automatic
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Discord/Discord.list"
+      policy: Automatic
+
+  # >> 其他国外服务 (Other International Services)
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/OneDrive/OneDrive.list"
+      policy: OneDrive
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/microsoft.conf"
+      policy: Microsoft
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GitHub/GitHub.list"
+      policy: Automatic
+  - rule_set:
+      match: "https://raw.githubusercontent.com/getsomecat/GetSomeCats/Surge/rule/substore.list"
+      policy: Automatic
+  - domain_suffix:
+      match: "vercel.app"
+      policy: Automatic
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Speedtest/Speedtest.list"
+      policy: Speedtest
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Riot/Riot.list"
+      policy: "United States"
+  - domain_suffix:
+      match: "mypikpak.com"
+      policy: "United States"
+  - domain_suffix:
+      match: "nssurge.com"
+      policy: Automatic
+  - domain_suffix:
+      match: "surgee.me"
+      policy: Automatic
+  - domain_suffix:
+      match: "www.torrentmac.net"
+      policy: Automatic
+  - domain_suffix:
+      match: "cloudflare.com"
+      policy: Automatic
+  - domain:
+      match: "jable.tv"
+      policy: Automatic
+  - domain:
+      match: "api.amplitude.com"
+      policy: Automatic
+  - domain:
+      match: "m.cmx.im"
+      policy: Automatic
+  - domain_suffix:
+      match: "api.themoviedb.org"
+      policy: Automatic
+
+  # >> 国内规则 (Mainland China Rules)
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/direct.conf"
+      policy: Mainland
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/domestic.conf"
+      policy: Mainland
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/ip/domestic.conf"
+      policy: Mainland
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/ChinaMax/ChinaMax.list"
+      policy: Mainland
+  - rule_set:
+      match: "https://raw.githubusercontent.com/VirgilClyne/GetSomeFries/main/ruleset/ASN.China.list"
+      policy: DIRECT
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/domainset/download.conf"
+      policy: Mainland
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/download.conf"
+      policy: Mainland
+  - rule_set:
+      match: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Tesla/Tesla.list"
+      policy: DIRECT
+  - domain_suffix:
+      match: "appstorrent.ru"
+      policy: DIRECT
+
+  # >> 国外规则 (Global Rules)
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/domainset/cdn.conf"
+      policy: Automatic
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/cdn.conf"
+      policy: Automatic
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/global_plus.conf"
+      policy: Automatic
+  - rule_set:
+      match: "https://ruleset.skk.moe/List/non_ip/global.conf"
+      policy: Automatic
+
+  # >> 网络优化与特殊规则 (Network Optimization)
+  # NOTE: Surge AND((PROTOCOL,UDP), (DOMAIN-SUFFIX,googlevideo.com)) → REJECT-NO-DROP
+  # Egern 暂不支持 AND 复合条件，以下为近似替代：
+  - domain_suffix:
+      match: "googlevideo.com"
+      policy: REJECT
+
+  - domain_suffix:
+      match: "smtp"
+      policy: DIRECT
+  - url_regex:
+      match: "(Subject|HELO|SMTP)"
+      policy: DIRECT
+
+  # >> 本地网络 (LAN)
+  - ip_cidr:
+      match: "0.0.0.0/8"
+      policy: DIRECT
+  - ip_cidr:
+      match: "10.0.0.0/8"
+      policy: DIRECT
+  - ip_cidr:
+      match: "100.64.0.0/10"
+      policy: DIRECT
+  - ip_cidr:
+      match: "127.0.0.0/8"
+      policy: DIRECT
+  - ip_cidr:
+      match: "169.254.0.0/16"
+      policy: DIRECT
+  - ip_cidr:
+      match: "172.16.0.0/12"
+      policy: DIRECT
+  - ip_cidr:
+      match: "192.168.0.0/16"
+      policy: DIRECT
+  - ip_cidr:
+      match: "224.0.0.0/4"
+      policy: DIRECT
+  - ip_cidr:
+      match: "240.0.0.0/4"
+      policy: DIRECT
+  - ip_cidr:
+      match: "255.255.255.255/32"
+      policy: DIRECT
+
+  # >> 兜底规则 (Final Rule)
+  - default:
+      policy: NoAuto
+
+# ==================== URL Rewrites / URL 重写 ====================
+url_rewrites:
+  # > Redirect Google Services / 重定向 Google 服务
+  - match: "^https?:\\/\\/(www\\.)?(g|google)\\.cn"
+    location: "https://www.google.com"
+    status_code: 302
+  - match: "^https?:\\/\\/(ditu|maps)\\.google\\.cn"
+    location: "https://maps.google.com"
+    status_code: 302
+
+  # > HTTPS Redirects / HTTPS 重定向
+  - match: "^https?:\\/\\/(www\\.)?taobao\\.com\\/"
+    location: "https://taobao.com/"
+    status_code: 302
+  - match: "^https?:\\/\\/(www\\.)?jd\\.com\\/"
+    location: "https://www.jd.com/"
+    status_code: 302
+  - match: "^https?:\\/\\/(www\\.)?mi\\.com\\/"
+    location: "https://www.mi.com/"
+    status_code: 302
+  - match: "^https?:\\/\\/you\\.163\\.com\\/"
+    location: "https://you.163.com/"
+    status_code: 302
+  - match: "^https?:\\/\\/(www\\.)?suning\\.com\\/"
+    location: "https://suning.com/"
+    status_code: 302
+  - match: "^https?:\\/\\/(www\\.)?yhd\\.com\\/"
+    location: "https://yhd.com/"
+    status_code: 302
+
+  # > Service Optimizations / 服务优化
+  - match: "^https?:\\/\\/api\\.abema\\.io\\/v\\d\\/ip\\/check"
+    location: ""
+    status_code: -1
+
+# ==================== Header Rewrites / 请求头重写 ====================
+header_rewrites:
+  # 解决github速率限制返回429问题 / Fix GitHub 429 Rate Limit Issue
+  - replace:
+      match: "^https:\\/\\/github\\.com\\/"
+      name: "Accept-Language"
+      value: "en-us"
+      type: request
+  - replace:
+      match: "^https:\\/\\/(raw|gist)\\.githubusercontent\\.com\\/"
+      name: "Accept-Language"
+      value: "en-us"
+      type: request
+
+# ==================== MITM / 中间人攻击 ====================
+mitm:
+  ca_p12: ""
+  ca_passphrase: ""
+  hostnames:
+    includes:
+      - "www.google.cn"
+      - "api.abema.io"
+      - "*.zhihu.com"
+      - "sub.store"
+    excludes: []
