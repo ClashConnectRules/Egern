@@ -2,45 +2,42 @@ ipv6: false
 vif_only: true
 hide_vpn_icon: false
 hijack_dns:
-  - '*:53'
+- '*:53'
 geoip_db_url: https://github.com/Hackl0us/GeoIP2-CN/raw/release/Country.mmdb
 direct_latency_test_url: http://connectivitycheck.gstatic.com/generate_204
-compat_route: false
-include_all_networks: false
-include_local_networks: false
 
 dns:
   bootstrap:
-    - 223.5.5.5
-    - 223.6.6.6
-    - 119.29.29.29
+  - 223.5.5.5
+  - 223.6.6.6
+  - 119.29.29.29
   upstreams:
     Alibaba:
-      - 223.5.5.5
-      - https://dns.alidns.com/dns-query
+    - 223.5.5.5
+    - https://dns.alidns.com/dns-query
     Tencent:
-      - 119.29.29.29
-      - https://doh.pub/dns-query
+    - 119.29.29.29
+    - https://doh.pub/dns-query
     China:
-      - 223.5.5.5
-      - 119.29.29.29
-      - https://doh.pub/dns-query
-      - https://dns.alidns.com/dns-query
+    - 223.5.5.5
+    - 119.29.29.29
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
     Global:
-      - https://1.1.1.1/dns-query
-      - https://8.8.8.8/dns-query
-      - https://dns.google/dns-query
-      - https://cloudflare-dns.com/dns-query
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+    - https://dns.google/dns-query
+    - https://cloudflare-dns.com/dns-query
   forward:
-    - domain_suffix:
-        match: cn
-        value: China
-    - domain_wildcard:
-        match: '*.cn'
-        value: China
-    - domain_wildcard:
-        match: '*'
-        value: Global
+  - domain_suffix:
+      match: cn
+      value: China
+  - domain_wildcard:
+      match: '*.cn'
+      value: China
+  - domain_wildcard:
+      match: '*'
+      value: Global
   hosts:
     '*.taobao.com': 223.5.5.5
     '*.tmall.com': 223.5.5.5
@@ -82,603 +79,562 @@ dns:
     melogin.cn: system
     falogin.cn: system
   proxy_nameservers:
-    - https://doh.pub/dns-query
-    - https://dns.alidns.com/dns-query
+  - https://doh.pub/dns-query
+  - https://dns.alidns.com/dns-query
   public_ip_lookup_url: https://ifconfig.me/ip
 
 policy_groups:
-  - select:
-      name: Mainland
-      policies:
-        - DIRECT
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/direct.png
-      hidden: false
-
-  - external:
-      name: AllServer
-      type: select
-      urls:
-        - 'Your Surge subscription link goes here'
-      filter: '^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量).)+$'
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png
-      hidden: false
-
-  - select:
-      name: Hong Kong
-      policies:
-        - AllServer
-      flatten: true
-      filter: 🇭🇰|香港|Hong\s*Kong|HongKong|HK(?!G)|HKG
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Hongkong.png
-      hidden: false
-
-  - select:
-      name: Taiwan
-      policies:
-        - AllServer
-      flatten: true
-      filter: 🇹🇼|台湾|Taiwan|TW(?!N)|Tai|TWN
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/taiwan.png
-      hidden: false
-
-  - select:
-      name: Japan
-      policies:
-        - AllServer
-      flatten: true
-      filter: 🇯🇵|日本|Japan|JP(?!N)|JPN
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Japan.png
-      hidden: false
-
-  - select:
-      name: Singapore
-      policies:
-        - AllServer
-      flatten: true
-      filter: 🇸🇬|新加坡|狮城|Singapore|SG(?!P)|SGP
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/singapore.png
-      hidden: false
-
-  - select:
-      name: United States
-      policies:
-        - AllServer
-      flatten: true
-      filter: 🇺🇸|美国|United\s*States|USA|US(?!A)|States|American
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/US.png
-      hidden: false
-
-  - select:
-      name: United Kingdom
-      policies:
-        - AllServer
-      flatten: true
-      filter: 🇬🇧|英国|United\s*Kingdom|UK(?!S)
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/UnitedKingdom.png
-      hidden: false
-
-  - select:
-      name: Korea
-      policies:
-        - AllServer
-      flatten: true
-      filter: 🇰🇷|韩国|Korea|KR(?!W)|KOR
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Korea.png
-      hidden: false
-
-  - select:
-      name: Other
-      policies:
-        - AllServer
-      flatten: true
-      filter: '^(?!.*(🇭🇰|香港|Hong\s*Kong|HongKong|HK(?!G)|HKG|🇹🇼|台湾|Taiwan|TW(?!N)|Tai|TWN|🇯🇵|日本|Japan|JP(?!N)|JPN|🇸🇬|新加坡|狮城|Singapore|SG(?!P)|SGP|🇺🇸|美国|United\s*States|USA|US(?!A)|States|American|🇬🇧|英国|United\s*Kingdom|UK(?!S)|🇰🇷|韩国|Korea|KR(?!W)|KOR)).*$'
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/EuropeanUnion.png
-      hidden: false
-
-  - auto_test:
-      name: Automatic
-      policies:
-        - Hong Kong
-        - Taiwan
-        - Japan
-        - Singapore
-        - United States
-        - United Kingdom
-        - Korea
-      interval: 300
-      tolerance: 50
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(5).png
-      hidden: false
-
-  - select:
-      name: Proxy
-      policies:
-        - Automatic
-        - Hong Kong
-        - Taiwan
-        - Singapore
-        - Japan
-        - United States
-        - United Kingdom
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png
-      hidden: false
-
-  - select:
-      name: NoAuto
-      policies:
-        - Mainland
-        - Automatic
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning.png
-      hidden: false
-
-  - select:
-      name: Apple
-      policies:
-        - Mainland
-        - Hong Kong
-        - United States
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/apple.png
-      hidden: false
-
-  - select:
-      name: AI
-      policies:
-        - Automatic
-        - United States
-        - Japan
-        - Singapore
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/chatgpt(1).png
-      hidden: false
-
-  - select:
-      name: Microsoft
-      policies:
-        - Mainland
-        - Hong Kong
-        - Singapore
-        - United States
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/microsoft.png
-      hidden: false
-
-  - select:
-      name: OneDrive
-      policies:
-        - Mainland
-        - Hong Kong
-        - Singapore
-        - United States
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/OneDrive.png
-      hidden: false
-
-  - select:
-      name: Telegram
-      policies:
-        - Automatic
-        - Singapore
-        - United States
-        - Hong Kong
-        - Taiwan
-        - Japan
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/telegram.png
-      hidden: false
-
-  - select:
-      name: WeChat
-      policies:
-        - Mainland
-        - Hong Kong
-        - Singapore
-        - United States
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/wechat.png
-      hidden: false
-
-  - select:
-      name: X
-      policies:
-        - Automatic
-        - Hong Kong
-        - Taiwan
-        - Singapore
-        - Japan
-        - United States
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/twitter.png
-      hidden: false
-
-  - select:
-      name: Bilibili
-      policies:
-        - Mainland
-        - Hong Kong
-        - Taiwan
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/bilibili.png
-      hidden: false
-
-  - select:
-      name: Disney+
-      policies:
-        - Hong Kong
-        - Singapore
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/disney.png
-      hidden: false
-
-  - select:
-      name: Netflix
-      policies:
-        - Hong Kong
-        - Taiwan
-        - Singapore
-        - Japan
-        - United States
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/netflix.png
-      hidden: false
-
-  - select:
-      name: TikTok
-      policies:
-        - Taiwan
-        - Singapore
-        - Japan
-        - United States
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/tiktok.png
-      hidden: false
-
-  - select:
-      name: YouTube
-      policies:
-        - Automatic
-        - Hong Kong
-        - Taiwan
-        - Singapore
-        - Japan
-        - United States
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/Youtube.png
-      hidden: false
-
-  - select:
-      name: Speedtest
-      policies:
-        - Mainland
-        - Automatic
-        - AllServer
-      icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/speedtest.png
-      hidden: false
+- select:
+    name: Mainland
+    policies:
+    - DIRECT
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/direct.png
+    hidden: false
+- external:
+    name: AllServer
+    type: select
+    urls:
+    - https://your-subscription-url
+    filter: '^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量).)+$'
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png
+    hidden: false
+- select:
+    name: Hong Kong
+    policies:
+    - AllServer
+    flatten: true
+    filter: '\U0001F1ED\U0001F1F0|香港|Hong\s*Kong|HongKong|HK(?!G)|HKG'
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Hongkong.png
+    hidden: false
+- select:
+    name: Taiwan
+    policies:
+    - AllServer
+    flatten: true
+    filter: '\U0001F1F9\U0001F1FC|台湾|Taiwan|TW(?!N)|Tai|TWN'
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/taiwan.png
+    hidden: false
+- select:
+    name: Japan
+    policies:
+    - AllServer
+    flatten: true
+    filter: '\U0001F1EF\U0001F1F5|日本|Japan|JP(?!N)|JPN'
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Japan.png
+    hidden: false
+- select:
+    name: Singapore
+    policies:
+    - AllServer
+    flatten: true
+    filter: '\U0001F1F8\U0001F1EC|新加坡|狮城|Singapore|SG(?!P)|SGP'
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/singapore.png
+    hidden: false
+- select:
+    name: United States
+    policies:
+    - AllServer
+    flatten: true
+    filter: '\U0001F1FA\U0001F1F8|美国|United\s*States|USA|US(?!A)|States|American'
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/US.png
+    hidden: false
+- select:
+    name: United Kingdom
+    policies:
+    - AllServer
+    flatten: true
+    filter: '\U0001F1EC\U0001F1E7|英国|United\s*Kingdom|UK(?!S)'
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/UnitedKingdom.png
+    hidden: false
+- select:
+    name: Korea
+    policies:
+    - AllServer
+    flatten: true
+    filter: '\U0001F1F0\U0001F1F7|韩国|Korea|KR(?!W)|KOR'
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Korea.png
+    hidden: false
+- select:
+    name: Other
+    policies:
+    - AllServer
+    flatten: true
+    filter: '^(?!.*(\U0001F1ED\U0001F1F0|香港|Hong\s*Kong|HongKong|HK(?!G)|HKG|\U0001F1F9\U0001F1FC|台湾|Taiwan|TW(?!N)|Tai|TWN|\U0001F1EF\U0001F1F5|日本|Japan|JP(?!N)|JPN|\U0001F1F8\U0001F1EC|新加坡|狮城|Singapore|SG(?!P)|SGP|\U0001F1FA\U0001F1F8|美国|United\s*States|USA|US(?!A)|States|American|\U0001F1EC\U0001F1E7|英国|United\s*Kingdom|UK(?!S)|\U0001F1F0\U0001F1F7|韩国|Korea|KR(?!W)|KOR)).*$'
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/EuropeanUnion.png
+    hidden: false
+- auto_test:
+    name: Automatic
+    policies:
+    - Hong Kong
+    - Taiwan
+    - Japan
+    - Singapore
+    - United States
+    - United Kingdom
+    - Korea
+    interval: 300
+    tolerance: 50
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(5).png
+    hidden: false
+- select:
+    name: Proxy
+    policies:
+    - Automatic
+    - Hong Kong
+    - Taiwan
+    - Singapore
+    - Japan
+    - United States
+    - United Kingdom
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png
+    hidden: false
+- select:
+    name: NoAuto
+    policies:
+    - Mainland
+    - Automatic
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning.png
+    hidden: false
+- select:
+    name: Apple
+    policies:
+    - Mainland
+    - Hong Kong
+    - United States
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/apple.png
+    hidden: false
+- select:
+    name: AI
+    policies:
+    - Automatic
+    - United States
+    - Japan
+    - Singapore
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/chatgpt(1).png
+    hidden: false
+- select:
+    name: Microsoft
+    policies:
+    - Mainland
+    - Hong Kong
+    - Singapore
+    - United States
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/microsoft.png
+    hidden: false
+- select:
+    name: OneDrive
+    policies:
+    - Mainland
+    - Hong Kong
+    - Singapore
+    - United States
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/OneDrive.png
+    hidden: false
+- select:
+    name: Telegram
+    policies:
+    - Automatic
+    - Singapore
+    - United States
+    - Hong Kong
+    - Taiwan
+    - Japan
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/telegram.png
+    hidden: false
+- select:
+    name: WeChat
+    policies:
+    - Mainland
+    - Hong Kong
+    - Singapore
+    - United States
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/wechat.png
+    hidden: false
+- select:
+    name: X
+    policies:
+    - Automatic
+    - Hong Kong
+    - Taiwan
+    - Singapore
+    - Japan
+    - United States
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/twitter.png
+    hidden: false
+- select:
+    name: Bilibili
+    policies:
+    - Mainland
+    - Hong Kong
+    - Taiwan
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/bilibili.png
+    hidden: false
+- select:
+    name: Disney+
+    policies:
+    - Hong Kong
+    - Singapore
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/disney.png
+    hidden: false
+- select:
+    name: Netflix
+    policies:
+    - Hong Kong
+    - Taiwan
+    - Singapore
+    - Japan
+    - United States
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/netflix.png
+    hidden: false
+- select:
+    name: TikTok
+    policies:
+    - Taiwan
+    - Singapore
+    - Japan
+    - United States
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/tiktok.png
+    hidden: false
+- select:
+    name: YouTube
+    policies:
+    - Automatic
+    - Hong Kong
+    - Taiwan
+    - Singapore
+    - Japan
+    - United States
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/04ProxySoft/Youtube.png
+    hidden: false
+- select:
+    name: Speedtest
+    policies:
+    - Mainland
+    - Automatic
+    - AllServer
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/speedtest.png
+    hidden: false
 
 rules:
-  - rule_set:
-      match: https://raw.githubusercontent.com/zxfccmm4/Profiles/refs/heads/main/Surge/Ruleset/Unbreak.list
-      policy: DIRECT
-
-  - rule_set:
-      match: https://ruleset.skk.moe/List/domainset/reject.conf
-      policy: REJECT
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/reject-drop.conf
-      policy: REJECT
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/reject.conf
-      policy: REJECT
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/reject.conf
-      policy: REJECT
-
-  - domain:
-      match: app-site-association.cdn-apple.com
-      policy: REJECT
-  - domain:
-      match: prpr.96110.cn.com
-      policy: DIRECT
-  - domain_keyword:
-      match: '96110'
-      policy: REJECT
-  - domain_suffix:
-      match: gjfzpt.cn
-      policy: REJECT
-
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/WeChat/WeChat.list
-      policy: WeChat
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/neteasemusic.conf
-      policy: Mainland
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/neteasemusic.conf
-      policy: Mainland
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list
-      policy: Bilibili
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Weibo/Weibo.list
-      policy: Mainland
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XiaoHongShu/XiaoHongShu.list
-      policy: Mainland
-
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/AppStore/AppStore.list
-      policy: DIRECT
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/AppleNews/AppleNews.list
-      policy: United States
-  - rule_set:
-      match: https://ruleset.skk.moe/List/domainset/apple_cdn.conf
-      policy: Apple
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/AppleTV/AppleTV.list
-      policy: Apple
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Apple/Apple.list
-      policy: Apple
-
-  - domain_keyword:
-      match: diabrowser.engineering
-      policy: AI
-  - domain_suffix:
-      match: apple-relay.apple.com
-      policy: AI
-  - domain_suffix:
-      match: apple-relay.cloudflare.com
-      policy: AI
-  - domain_keyword:
-      match: apple-relay
-      policy: AI
-  - domain_suffix:
-      match: googleapis.com
-      policy: AI
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/ai.conf
-      policy: AI
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Bing/Bing.list
-      policy: AI
-  - domain_suffix:
-      match: diabrowser.engineering
-      policy: AI
-
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Disney/Disney.list
-      policy: Disney+
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Netflix/Netflix.list
-      policy: Netflix
-  - rule_set:
-      match: https://raw.githubusercontent.com/Semporia/TikTok-Unlock/master/Surge/TikTok.list
-      policy: TikTok
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/YouTube/YouTube.list
-      policy: YouTube
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GoogleSearch/GoogleSearch.list
-      policy: YouTube
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Emby/Emby.list
-      policy: Automatic
-
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/stream_us.conf
-      policy: United States
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/stream_us.conf
-      policy: United States
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/stream_eu.conf
-      policy: United Kingdom
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/stream_eu.conf
-      policy: United Kingdom
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/stream_jp.conf
-      policy: Japan
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/stream_jp.conf
-      policy: Japan
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/stream_kr.conf
-      policy: Korea
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/stream_kr.conf
-      policy: Korea
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/stream_hk.conf
-      policy: Hong Kong
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/stream_hk.conf
-      policy: Hong Kong
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/stream_tw.conf
-      policy: Taiwan
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/stream_tw.conf
-      policy: Taiwan
-
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Twitter/Twitter.list
-      policy: X
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/telegram.conf
-      policy: Telegram
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/telegram.conf
-      policy: Telegram
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/telegram_asn.conf
-      policy: Telegram
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Facebook/Facebook.list
-      policy: Automatic
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Instagram/Instagram.list
-      policy: Automatic
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Threads/Threads.list
-      policy: Automatic
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Discord/Discord.list
-      policy: Automatic
-
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/OneDrive/OneDrive.list
-      policy: OneDrive
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/microsoft.conf
-      policy: Microsoft
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GitHub/GitHub.list
-      policy: Automatic
-  - rule_set:
-      match: https://raw.githubusercontent.com/getsomecat/GetSomeCats/Surge/rule/substore.list
-      policy: Automatic
-  - domain_suffix:
-      match: vercel.app
-      policy: Automatic
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Speedtest/Speedtest.list
-      policy: Speedtest
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Riot/Riot.list
-      policy: United States
-  - domain_suffix:
-      match: mypikpak.com
-      policy: United States
-  - domain_suffix:
-      match: nssurge.com
-      policy: Automatic
-  - domain_suffix:
-      match: surgee.me
-      policy: Automatic
-  - domain_suffix:
-      match: www.torrentmac.net
-      policy: Automatic
-  - domain_suffix:
-      match: cloudflare.com
-      policy: Automatic
-  - domain:
-      match: jable.tv
-      policy: Automatic
-  - domain:
-      match: api.amplitude.com
-      policy: Automatic
-  - domain:
-      match: m.cmx.im
-      policy: Automatic
-  - domain_suffix:
-      match: api.themoviedb.org
-      policy: Automatic
-
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/direct.conf
-      policy: Mainland
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/domestic.conf
-      policy: Mainland
-  - rule_set:
-      match: https://ruleset.skk.moe/List/ip/domestic.conf
-      policy: Mainland
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/ChinaMax/ChinaMax.list
-      policy: Mainland
-  - rule_set:
-      match: https://raw.githubusercontent.com/VirgilClyne/GetSomeFries/main/ruleset/ASN.China.list
-      policy: DIRECT
-  - rule_set:
-      match: https://ruleset.skk.moe/List/domainset/download.conf
-      policy: Mainland
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/download.conf
-      policy: Mainland
-  - rule_set:
-      match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Tesla/Tesla.list
-      policy: DIRECT
-  - domain_suffix:
-      match: appstorrent.ru
-      policy: DIRECT
-
-  - rule_set:
-      match: https://ruleset.skk.moe/List/domainset/cdn.conf
-      policy: Automatic
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/cdn.conf
-      policy: Automatic
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/global_plus.conf
-      policy: Automatic
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/global.conf
-      policy: Automatic
-
-  - domain_suffix:
-      match: googlevideo.com
-      policy: REJECT
-
-  - domain_suffix:
-      match: smtp
-      policy: DIRECT
-  - url_regex:
-      match: (Subject|HELO|SMTP)
-      policy: DIRECT
-
-  - rule_set:
-      match: https://ruleset.skk.moe/List/non_ip/lan.conf
-      policy: DIRECT
-
-  - domain_suffix:
-      match: cn
-      policy: Mainland
-  - geoip:
-      match: CN
-      policy: Mainland
-      no_resolve: true
-
-  - default:
-      policy: NoAuto
+- rule_set:
+    match: https://raw.githubusercontent.com/zxfccmm4/Profiles/refs/heads/main/Surge/Ruleset/Unbreak.list
+    policy: DIRECT
+- rule_set:
+    match: https://ruleset.skk.moe/List/domainset/reject.conf
+    policy: REJECT
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/reject-drop.conf
+    policy: REJECT
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/reject.conf
+    policy: REJECT
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/reject.conf
+    policy: REJECT
+- domain:
+    match: app-site-association.cdn-apple.com
+    policy: REJECT
+- domain:
+    match: prpr.96110.cn.com
+    policy: DIRECT
+- domain_keyword:
+    match: '96110'
+    policy: REJECT
+- domain_suffix:
+    match: gjfzpt.cn
+    policy: REJECT
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/WeChat/WeChat.list
+    policy: WeChat
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/neteasemusic.conf
+    policy: Mainland
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/neteasemusic.conf
+    policy: Mainland
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/BiliBili/BiliBili.list
+    policy: Bilibili
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Weibo/Weibo.list
+    policy: Mainland
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/XiaoHongShu/XiaoHongShu.list
+    policy: Mainland
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/AppStore/AppStore.list
+    policy: DIRECT
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/AppleNews/AppleNews.list
+    policy: United States
+- rule_set:
+    match: https://ruleset.skk.moe/List/domainset/apple_cdn.conf
+    policy: Apple
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/AppleTV/AppleTV.list
+    policy: Apple
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Apple/Apple.list
+    policy: Apple
+- domain_keyword:
+    match: diabrowser.engineering
+    policy: AI
+- domain_suffix:
+    match: apple-relay.apple.com
+    policy: AI
+- domain_suffix:
+    match: apple-relay.cloudflare.com
+    policy: AI
+- domain_keyword:
+    match: apple-relay
+    policy: AI
+- domain_suffix:
+    match: googleapis.com
+    policy: AI
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/ai.conf
+    policy: AI
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Bing/Bing.list
+    policy: AI
+- domain_suffix:
+    match: diabrowser.engineering
+    policy: AI
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Disney/Disney.list
+    policy: Disney+
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Netflix/Netflix.list
+    policy: Netflix
+- rule_set:
+    match: https://raw.githubusercontent.com/Semporia/TikTok-Unlock/master/Surge/TikTok.list
+    policy: TikTok
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/YouTube/YouTube.list
+    policy: YouTube
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GoogleSearch/GoogleSearch.list
+    policy: YouTube
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Emby/Emby.list
+    policy: Automatic
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/stream_us.conf
+    policy: United States
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/stream_us.conf
+    policy: United States
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/stream_eu.conf
+    policy: United Kingdom
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/stream_eu.conf
+    policy: United Kingdom
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/stream_jp.conf
+    policy: Japan
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/stream_jp.conf
+    policy: Japan
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/stream_kr.conf
+    policy: Korea
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/stream_kr.conf
+    policy: Korea
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/stream_hk.conf
+    policy: Hong Kong
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/stream_hk.conf
+    policy: Hong Kong
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/stream_tw.conf
+    policy: Taiwan
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/stream_tw.conf
+    policy: Taiwan
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Twitter/Twitter.list
+    policy: X
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/telegram.conf
+    policy: Telegram
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/telegram.conf
+    policy: Telegram
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/telegram_asn.conf
+    policy: Telegram
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Facebook/Facebook.list
+    policy: Automatic
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Instagram/Instagram.list
+    policy: Automatic
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Threads/Threads.list
+    policy: Automatic
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Discord/Discord.list
+    policy: Automatic
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/OneDrive/OneDrive.list
+    policy: OneDrive
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/microsoft.conf
+    policy: Microsoft
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/GitHub/GitHub.list
+    policy: Automatic
+- rule_set:
+    match: https://raw.githubusercontent.com/getsomecat/GetSomeCats/Surge/rule/substore.list
+    policy: Automatic
+- domain_suffix:
+    match: vercel.app
+    policy: Automatic
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Speedtest/Speedtest.list
+    policy: Speedtest
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Riot/Riot.list
+    policy: United States
+- domain_suffix:
+    match: mypikpak.com
+    policy: United States
+- domain_suffix:
+    match: nssurge.com
+    policy: Automatic
+- domain_suffix:
+    match: surgee.me
+    policy: Automatic
+- domain_suffix:
+    match: www.torrentmac.net
+    policy: Automatic
+- domain_suffix:
+    match: cloudflare.com
+    policy: Automatic
+- domain:
+    match: jable.tv
+    policy: Automatic
+- domain:
+    match: api.amplitude.com
+    policy: Automatic
+- domain:
+    match: m.cmx.im
+    policy: Automatic
+- domain_suffix:
+    match: api.themoviedb.org
+    policy: Automatic
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/direct.conf
+    policy: Mainland
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/domestic.conf
+    policy: Mainland
+- rule_set:
+    match: https://ruleset.skk.moe/List/ip/domestic.conf
+    policy: Mainland
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/ChinaMax/ChinaMax.list
+    policy: Mainland
+- rule_set:
+    match: https://raw.githubusercontent.com/VirgilClyne/GetSomeFries/main/ruleset/ASN.China.list
+    policy: DIRECT
+- rule_set:
+    match: https://ruleset.skk.moe/List/domainset/download.conf
+    policy: Mainland
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/download.conf
+    policy: Mainland
+- rule_set:
+    match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Tesla/Tesla.list
+    policy: DIRECT
+- domain_suffix:
+    match: appstorrent.ru
+    policy: DIRECT
+- rule_set:
+    match: https://ruleset.skk.moe/List/domainset/cdn.conf
+    policy: Automatic
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/cdn.conf
+    policy: Automatic
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/global_plus.conf
+    policy: Automatic
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/global.conf
+    policy: Automatic
+- domain_suffix:
+    match: googlevideo.com
+    policy: REJECT
+- domain_suffix:
+    match: smtp
+    policy: DIRECT
+- url_regex:
+    match: (Subject|HELO|SMTP)
+    policy: DIRECT
+- rule_set:
+    match: https://ruleset.skk.moe/List/non_ip/lan.conf
+    policy: DIRECT
+- domain_suffix:
+    match: cn
+    policy: Mainland
+- geoip:
+    match: CN
+    policy: Mainland
+    no_resolve: true
+- default:
+    policy: NoAuto
 
 url_rewrites:
-  - match: '^https?:\/\/(www\.)?(g|google)\.cn'
-    location: https://www.google.com
-    status_code: 302
-  - match: '^https?:\/\/(ditu|maps)\.google\.cn'
-    location: https://maps.google.com
-    status_code: 302
-  - match: '^https?:\/\/(www\.)?taobao\.com\/'
-    location: https://taobao.com/
-    status_code: 302
-  - match: '^https?:\/\/(www\.)?jd\.com\/'
-    location: https://www.jd.com/
-    status_code: 302
-  - match: '^https?:\/\/(www\.)?mi\.com\/'
-    location: https://www.mi.com/
-    status_code: 302
-  - match: '^https?:\/\/you\.163\.com\/'
-    location: https://you.163.com/
-    status_code: 302
-  - match: '^https?:\/\/(www\.)?suning\.com\/'
-    location: https://suning.com/
-    status_code: 302
-  - match: '^https?:\/\/(www\.)?yhd\.com\/'
-    location: https://yhd.com/
-    status_code: 302
-  - match: '^https?:\/\/api\.abema\.io\/v\d\/ip\/check'
-    location: ''
-    status_code: -1
+- match: '^https?:\/\/(www\.)?(g|google)\.cn'
+  location: https://www.google.com
+  status_code: 302
+- match: '^https?:\/\/(ditu|maps)\.google\.cn'
+  location: https://maps.google.com
+  status_code: 302
+- match: '^https?:\/\/(www\.)?taobao\.com\/'
+  location: https://taobao.com/
+  status_code: 302
+- match: '^https?:\/\/(www\.)?jd\.com\/'
+  location: https://www.jd.com/
+  status_code: 302
+- match: '^https?:\/\/(www\.)?mi\.com\/'
+  location: https://www.mi.com/
+  status_code: 302
+- match: '^https?:\/\/you\.163\.com\/'
+  location: https://you.163.com/
+  status_code: 302
+- match: '^https?:\/\/(www\.)?suning\.com\/'
+  location: https://suning.com/
+  status_code: 302
+- match: '^https?:\/\/(www\.)?yhd\.com\/'
+  location: https://yhd.com/
+  status_code: 302
+- match: '^https?:\/\/api\.abema\.io\/v\d\/ip\/check'
+  location: ''
+  status_code: -1
 
 header_rewrites:
-  - replace:
-      match: '^https:\/\/github\.com\/'
-      name: Accept-Language
-      value: en-us
-      type: request
-  - replace:
-      match: '^https:\/\/(raw|gist)\.githubusercontent\.com\/'
-      name: Accept-Language
-      value: en-us
-      type: request
+- replace:
+    match: '^https:\/\/github\.com\/'
+    name: Accept-Language
+    value: en-us
+    type: request
+- replace:
+    match: '^https:\/\/(raw|gist)\.githubusercontent\.com\/'
+    name: Accept-Language
+    value: en-us
+    type: request
 
 mitm:
   ca_p12: egern.p12
   ca_passphrase: egern
   hostnames:
     includes:
-      - www.google.cn
-      - api.abema.io
-      - '*.zhihu.com'
-      - sub.store
+    - www.google.cn
+    - api.abema.io
+    - '*.zhihu.com'
+    - sub.store
     excludes: []
