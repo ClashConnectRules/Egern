@@ -73,7 +73,7 @@ policy_groups:
     type: select
     urls:
     - https://your-subscription-url
-    filter: '^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量|CMCC).)+$'
+    filter: '^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量).)+$'
     update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png
     hidden: false
