@@ -7,9 +7,6 @@ geoip_db_url: https://raw.githubusercontent.com/Masaiki/GeoIP2-CN/release/Countr
 asn_db_url: https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLite2-ASN.mmdb
 direct_latency_test_url: http://wifi.vivo.com.cn/generate_204
 compat_route: false
-vif_excluded_routes:
-- boc.com
-- cmbchina.com
 dns:
   bootstrap:
   - 223.5.5.5
@@ -83,6 +80,7 @@ policy_groups:
     urls:
     - https://your-subscription-url
     filter: '^((?!Remain|Expired|官网|如需|套餐|去除|剩余|距离|Reset|重置|流量).)+$'
+    update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/rocket(1).png
     hidden: false
 - select:
@@ -91,6 +89,7 @@ policy_groups:
     - AllServer
     flatten: true
     filter: '🇭🇰|HK|香港|Hong\s*Kong|HongKong|HKG'
+    update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Hongkong.png
     hidden: false
 - select:
@@ -99,6 +98,7 @@ policy_groups:
     - AllServer
     flatten: true
     filter: '🇹🇼|TW|台湾|Taiwan|Tai|TWN'
+    update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/taiwan.png
     hidden: false
 - select:
@@ -107,6 +107,7 @@ policy_groups:
     - AllServer
     flatten: true
     filter: '🇯🇵|JP|日本|Japan|JPN'
+    update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Japan.png
     hidden: false
 - select:
@@ -115,6 +116,7 @@ policy_groups:
     - AllServer
     flatten: true
     filter: '🇸🇬|SG|新加坡|狮城|Singapore|SGP'
+    update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/singapore.png
     hidden: false
 - select:
@@ -123,6 +125,7 @@ policy_groups:
     - AllServer
     flatten: true
     filter: '🇺🇸|US|美国|United\s*States|USA|States|American'
+    update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/US.png
     hidden: false
 - select:
@@ -131,6 +134,7 @@ policy_groups:
     - AllServer
     flatten: true
     filter: '🇬🇧|UK|英国|United\s*Kingdom|England|Britain'
+    update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/UnitedKingdom.png
     hidden: false
 - select:
@@ -139,6 +143,7 @@ policy_groups:
     - AllServer
     flatten: true
     filter: '🇰🇷|KR|韩国|Korea|KOR'
+    update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/Korea.png
     hidden: false
 - select:
@@ -147,6 +152,7 @@ policy_groups:
     - AllServer
     flatten: true
     filter: '^(?!.*(🇭🇰|HK|香港|Hong\s*Kong|HongKong|HKG|🇹🇼|TW|台湾|Taiwan|Tai|TWN|🇯🇵|JP|日本|Japan|JPN|🇸🇬|SG|新加坡|狮城|Singapore|SGP|🇺🇸|US|美国|United\s*States|USA|States|American|🇬🇧|UK|英国|United\s*Kingdom|England|Britain|🇰🇷|KR|韩国|Korea|KOR)).*$'
+    update_interval: 86400
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/01Country/EuropeanUnion.png
     hidden: false
 - auto_test:
@@ -161,6 +167,7 @@ policy_groups:
     - Korea
     interval: 300
     tolerance: 50
+    timeout: 3
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/lightning(5).png
     hidden: false
 - select:
@@ -383,9 +390,6 @@ rules:
 - rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Bing/Bing.list
     policy: AI
-- domain_suffix:
-    match: diabrowser.engineering
-    policy: AI
 - rule_set:
     match: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Disney/Disney.list
     policy: Disney+
@@ -572,10 +576,6 @@ rules:
     no_resolve: true
 - default:
     policy: NoAuto
-scriptings:
-- generic:
-    name: 网络
-    script_url: https://raw.githubusercontent.com/hikling/egern/refs/heads/main/component/wangluo.js
 mitm:
   ca_p12: egern.p12
   ca_passphrase: egern
