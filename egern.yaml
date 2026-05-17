@@ -68,12 +68,6 @@ dns:
   - https://dns.alidns.com/dns-query
   public_ip_lookup_url: https://ifconfig.me/ip
 policy_groups:
-- select:
-    name: Mainland
-    policies:
-    - DIRECT
-    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/direct.png
-    hidden: false
 - external:
     name: AllServer
     type: select
@@ -307,6 +301,12 @@ policy_groups:
     - Automatic
     - AllServer
     icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/03CNSoft/speedtest.png
+    hidden: false
+- select:
+    name: Mainland
+    policies:
+    - DIRECT
+    icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/05icon/direct.png
     hidden: false
 rules:
 - rule_set:
