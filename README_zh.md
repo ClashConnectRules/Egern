@@ -15,7 +15,7 @@
   <a href="README_zh.md">简体中文</a> · <a href="README.md">English</a>
 </p>
 
-> **订阅推荐**：[点击注册](https://hizrj.xyz/#/register?code=BwiZnFLE) 获取订阅链接，填入 `AllServer` 即可使用。
+> **订阅推荐**：[点击注册](https://hizrj.xyz/#/register?code=qpdHySHz) 获取订阅链接，填入 `AllServer` 即可使用。
 
 ---
 
