@@ -15,7 +15,7 @@
   <a href="README_zh.md">简体中文</a> · <a href="README.md">English</a>
 </p>
 
-> **Subscription**: [Register here](https://hizrj.xyz/#/register?code=BwiZnFLE) to get your subscription URL for `AllServer`.
+> **Subscription**: [Register here](https://hizrj.xyz/#/register?code=qpdHySHz) to get your subscription URL for `AllServer`.
 
 ---
 
